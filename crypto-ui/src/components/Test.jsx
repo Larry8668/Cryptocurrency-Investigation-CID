@@ -48,11 +48,11 @@ const Test = () => {
   };
 
   return (
-    <div className="w-[100vw] h-[100vh]" id="graphContainer">
+    <div className="w-[100vw] h-[100vh] bg-white text-black" id="graphContainer">
       <div className="w-full h-[15%] flex items-center justify-center text-5xl">
         Test Env
       </div>
-      <div className="w-full h-[85%] border-2 border-white rounded p-2">
+      <div className="w-full h-[85%] border-2 border-black rounded p-2">
         <div className="w-full h-full relative">
           <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes}>
             <Background variant="dots" gap={12} size={1} />
