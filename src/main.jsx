@@ -1,4 +1,3 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import GraphComponent from "./components/Graph.jsx";
@@ -10,6 +9,9 @@ import {
 } from "react-router-dom";
 import { NextUIProvider } from "@nextui-org/react";
 import LandingPageComponent from "./components/LandingPageComponent.jsx";
+import Test from "./components/Test.jsx";
+import { ElkPage } from "./elkjs/ElkPage.jsx";
+import { ReactFlowProvider } from "reactflow";
 
 const router = createBrowserRouter([
   {
@@ -25,10 +27,20 @@ const router = createBrowserRouter([
     path: "graph/:walletId",
     element: <GraphComponent />,
   },
+  {
+    path: "/test",
+    element: <Test />
+  },
+  {
+    path: "/elkjs",
+    element: < ElkPage />
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
     <NextUIProvider>
-      <RouterProvider router={router} />
+      <ReactFlowProvider>
+        <RouterProvider router={router} />
+      </ReactFlowProvider>
     </NextUIProvider>
 );
