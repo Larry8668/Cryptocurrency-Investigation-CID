@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import ReactFlow, { Background } from "reactflow";
 import "reactflow/dist/style.css";
 import CustomNode from "../components/CustomNode";
-import { nodeData } from "../../data/node-data"; // Assuming your data is in a file named nodeData.js
+import { nodeData } from "../../data/node-data";
+import { Toaster } from "sonner";
 
-const columnSpacing = 200;
+const columnSpacing = 250;
 const rowSpacing = 100;
 
 const Test = () => {
@@ -30,7 +31,7 @@ const Test = () => {
 
         return layerNodes.map((node, index) => ({
           ...node,
-          type: "customNode", // Specify the custom node type
+          type: "customNode",
           position: {
             x: colIndex * columnSpacing,
             y: verticalCenter - totalHeight / 2 + index * rowSpacing,
@@ -42,31 +43,6 @@ const Test = () => {
     setNodes(positionedNodes);
   }, []);
 
-  const addNode = () => {
-    const newLayer = 1;
-    const nodesInLayer = nodes.filter((node) => node.layer === newLayer);
-    const newNodeId = (nodes.length + 1).toString();
-
-    const containerHeight =
-      document.getElementById("graphContainer")?.clientHeight || 500;
-    const verticalCenter = containerHeight / 2;
-    const totalHeight = nodesInLayer.length * rowSpacing;
-
-    const newNode = {
-      id: newNodeId,
-      layer: newLayer,
-      type: "customNode", // Specify the custom node type
-      position: {
-        x: (newLayer - 1) * columnSpacing,
-        y: verticalCenter - totalHeight / 2 + nodesInLayer.length * rowSpacing,
-      },
-      data: { label: `Node ${newNodeId}`, emoji: "🔥" },
-    };
-
-    setNodes((nds) => [...nds, newNode]);
-  };
-
-  // Define node types for React Flow
   const nodeTypes = {
     customNode: CustomNode,
   };
@@ -81,16 +57,9 @@ const Test = () => {
           <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes}>
             <Background variant="dots" gap={12} size={1} />
           </ReactFlow>
-          {/* <div className="absolute bottom-5 right-5">
-            <button
-              onClick={addNode}
-              className="px-4 py-2 bg-blue-500 text-white rounded"
-            >
-              Add Node
-            </button>
-          </div> */}
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
