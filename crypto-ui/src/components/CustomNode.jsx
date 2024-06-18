@@ -31,10 +31,9 @@ const CustomNode = ({ data }) => {
   return (
     <div
       onClick={() => {
-        alert("Bruh");
         toast.info(`Seeing ${data.label} on ${data.exchange}`)
       }}
-      className="min-w-32 h-14 p-4 flex items-center justify-around gap-4 bg-white border-2 border-red-700 rounded"
+      className="h-14 p-1 flex items-center gap-4 bg-white border-2 border-red-700 rounded-full border-dashed"
     >
       <span className="p-1 rounded-full bg-slate-600">
         <img
@@ -44,7 +43,6 @@ const CustomNode = ({ data }) => {
           height="40"
         />
       </span>
-      <div className="text-black">{data.label}</div>
       <Handle
         type="source"
         position={Position.Right}
