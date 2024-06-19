@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ReactFlow, { Background } from "reactflow";
 import "reactflow/dist/style.css";
-import CustomNode from "../components/CustomNode";
+import CustomNode from "./CustomNode";
 import { nodeData } from "../../data/node-data";
 import { Toaster } from "sonner";
+import { GlobalContext } from "../context/GlobalContext";
+import Modal from "../components/modal/Modal";
 
 const columnSpacing = 250;
 const rowSpacing = 100;
 
 const Test = () => {
+  const { sideModalOpen, setSideModalOpen, selectedNode, setSelectedNode } = useContext(GlobalContext);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState(nodeData.initialEdges);
 
@@ -48,9 +51,9 @@ const Test = () => {
   };
 
   return (
-    <div className="w-[100vw] h-[100vh] bg-white text-black" id="graphContainer">
+    <div className="w-[100vw] h-[100vh] bg-white text-black p-4" id="graphContainer">
       <div className="w-full h-[15%] flex items-center justify-center text-5xl">
-        Test Env
+        Test Env {sideModalOpen ? "Open" : "Closed"}
       </div>
       <div className="w-full h-[85%] border-2 border-black rounded p-2">
         <div className="w-full h-full relative">
@@ -59,7 +62,8 @@ const Test = () => {
           </ReactFlow>
         </div>
       </div>
-      <Toaster />
+      <Modal props={{ data: selectedNode, sideModalOpen, setSideModalOpen }} />      
+      <Toaster position="bottom-left"/>
     </div>
   );
 };
