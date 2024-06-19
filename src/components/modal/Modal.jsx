@@ -72,7 +72,7 @@ const Modal = ({ props }) => {
 
   return (
     <div
-      className={`fixed top-0 right-0 bottom-0 h-[98%] w-[40vw] bg-white shadow-lg transform rounded-l-lg my-2 border-2 border-r-0 border-black ${
+      className={`fixed top-0 right-0 bottom-0 h-[98%] w-[100%] md:w-[40vw] bg-white shadow-lg transform rounded-lg md:rounded-r-none my-2 border-2 md:border-r-0 border-black ${
         sideModalOpen ? "translate-x-0" : "translate-x-full"
       } transition-transform duration-300 ease-in-out z-50`}
     >
