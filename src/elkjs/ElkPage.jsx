@@ -26,7 +26,7 @@ export function ElkPage() {
   useLayoutNodes();
 
   return (
-    <div className="w-[100vw] h-[100vh]">
+    <div className="w-[100vw] h-[100vh] bg-white text-black">
       <ReactFlow
         nodes={nodes}
         onNodesChange={onNodesChange}
