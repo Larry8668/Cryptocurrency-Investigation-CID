@@ -7,7 +7,7 @@ import { Toaster } from "sonner";
 import { GlobalContext } from "../context/GlobalContext";
 import Modal from "../components/modal/Modal";
 
-const columnSpacing = 250;
+const columnSpacing = 200;
 const rowSpacing = 100;
 
 const Test = () => {
@@ -57,8 +57,8 @@ const Test = () => {
       </div>
       <div className="w-full h-[85%] border-2 border-black rounded p-2">
         <div className="w-full h-full relative">
-          <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes}>
-            <Background variant="dots" gap={12} size={1} />
+          <ReactFlow nodes={nodes} edges={edges} nodeTypes={nodeTypes} fitView={true} draggable={true}>
+            <Background variant="lines" gap={[100, 500000]} lineWidth={2} offset={3} />
           </ReactFlow>
         </div>
       </div>
