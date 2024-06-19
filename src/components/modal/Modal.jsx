@@ -76,7 +76,7 @@ const Modal = ({ props }) => {
         sideModalOpen ? "translate-x-0" : "translate-x-full"
       } transition-transform duration-300 ease-in-out z-50`}
     >
-      <div className="p-4 h-full w-full flex flex-col justify-start items-center">
+      <div className="p-4 h-full w-full overflow-hidden flex flex-col justify-start items-center">
         <div className="w-full flex justify-start items-center">
           <button
             onClick={() => setSideModalOpen(false)}
@@ -86,7 +86,7 @@ const Modal = ({ props }) => {
           </button>
         </div>
         {data ? (
-          <div className="w-full flex flex-col justify-start items-center gap-10">
+          <div className="w-full h-full flex flex-col justify-start items-center gap-10">
             <span className="flex justify-center items-center p-2 bg-slate-600 rounded-full">
               <img
                 src={getImageByExchange(data?.exchange)}
@@ -102,7 +102,7 @@ const Modal = ({ props }) => {
               </h2>
               <p className="text-lg">Exchange: {data?.exchange}</p>
             </div>
-            <div className="w-full h-full border-t-2 border-black p-4 flex flex-col justify-start items-center gap-5">
+            <div className="w-full h-full border-t-2 border-b-2 border-black p-4 flex flex-col justify-start items-center gap-5 overflow-y-auto">
               <div className="w-[80%] p-2 border-2 rounded border-t-2 border-black flex flex-col justify-start items-center gap-2">
                 <div className="w-full text-left">Transactions Frequency: </div>
                 <LineGraph props={{ graphData }} />
