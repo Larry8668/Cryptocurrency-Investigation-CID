@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -15,15 +15,14 @@ import ElkNode from "./ElkNode";
 import { nodes as initNodes } from "./nodes";
 import { edges as initEdges } from "./edges";
 import useLayoutNodes from "./useLayoutNodes";
+import { GlobalContext } from "../context/GlobalContext";
 
 const nodeTypes = {
   elk: ElkNode,
 };
 
 export function ElkPage() {
-  // const [nodes, , onNodesChange] = useNodesState(initNodes);
-  // const [edges, , onEdgesChange] = useEdgesState(initEdges);
-  
+  const { sideModalOpen, setSideModalOpen, selectedNode, setSelectedNode } = useContext(GlobalContext);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
@@ -36,12 +35,14 @@ export function ElkPage() {
         console.log(data.result);
 
         const formatAddress = (address) => `${address.slice(0, 5)}...${address.slice(-5)}`;
-
         const processedNodes = [];
         const processedEdges = [];
         const nodeMap = new Map();
+        const threshold = 0.00001;
 
         data.result.forEach((item) => {
+          const valueInEth = item.value / 10 ** 18;
+          if (valueInEth < threshold) return; 
           const fromAddress = item.from_address;
           const toAddress = item.to_address;
 
@@ -53,7 +54,7 @@ export function ElkPage() {
                 sourceHandles: [{ id: `${fromAddress}-s` }],
                 targetHandles: [{ id: `${fromAddress}-t` }],
               },
-              position: { x: Math.random() * 600, y: Math.random() * 400 },
+              position: { x: 0, y: 0 },
               type: 'elk',
             };
             processedNodes.push(fromNode);
@@ -68,7 +69,7 @@ export function ElkPage() {
                 sourceHandles: [{ id: `${toAddress}-s` }],
                 targetHandles: [{ id: `${toAddress}-t` }],
               },
-              position: { x: Math.random() * 600, y: Math.random() * 400 },
+              position: { x: 50, y: 50 },
               type: 'elk',
             };
             processedNodes.push(toNode);
@@ -83,7 +84,7 @@ export function ElkPage() {
               sourceHandle: `${fromAddress}-s`,
               target: toAddress,
               targetHandle: `${toAddress}-t`,
-              label: `${item.value} ETH`,
+              label: `${(item.value / 10 ** 18).toFixed(5)} ETH`,
             };
             processedEdges.push(edge);
           }
