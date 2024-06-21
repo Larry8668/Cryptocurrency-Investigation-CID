@@ -11,12 +11,12 @@ import ReactFlow, {
 
 import "reactflow/dist/style.css";
 import "../index.css";
-import { FaceIcon, ImageIcon, SunIcon } from '@radix-ui/react-icons'
+import { SunIcon } from '@radix-ui/react-icons'
 
 import ElkNode from "./ElkNode";
 import useLayoutNodes from "./useLayoutNodes";
 import { GlobalContext } from "../context/GlobalContext";
-import DownloadButton from '../utils/DownloadButton';
+import DownloadButton from "../utils/downloadButton"
 
 import Modal from "../components/modal/Modal";
 
