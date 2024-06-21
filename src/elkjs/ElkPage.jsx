@@ -2,24 +2,30 @@ import React, { useEffect, useContext } from "react";
 import ReactFlow, {
   Controls,
   Background,
-  MiniMap,
+  BackgroundVariant,
   useNodesState,
   useEdgesState,
-  ReactFlowProvider,
+  ControlButton,
+  Panel,
 } from "reactflow";
 
 import "reactflow/dist/style.css";
 import "../index.css";
+import { FaceIcon, ImageIcon, SunIcon } from '@radix-ui/react-icons'
 
 import ElkNode from "./ElkNode";
-import { nodes as initNodes } from "./nodes";
-import { edges as initEdges } from "./edges";
 import useLayoutNodes from "./useLayoutNodes";
 import { GlobalContext } from "../context/GlobalContext";
+import DownloadButton from '../utils/DownloadButton';
+
+import Modal from "../components/modal/Modal";
 
 const nodeTypes = {
   elk: ElkNode,
 };
+
+const connectionLineStyle = { stroke: '#ffff' };
+const snapGrid = [25, 25];
 
 export function ElkPage() {
   const { sideModalOpen, setSideModalOpen, selectedNode, setSelectedNode } = useContext(GlobalContext);
@@ -85,6 +91,7 @@ export function ElkPage() {
               target: toAddress,
               targetHandle: `${toAddress}-t`,
               label: `${(item.value / 10 ** 18).toFixed(5)} ETH`,
+              animated: true,
             };
             processedEdges.push(edge);
           }
@@ -100,20 +107,55 @@ export function ElkPage() {
     fetchData();
   }, []);
 
+  const handleNodeClick = (event, node) => {
+    setSelectedNode(node);
+    setSideModalOpen(true);
+  };
+
+  const modifiedOnNodesChange = (changes) => {
+    changes.forEach(change => {
+      if (change.type === 'select') {
+        handleNodeClick(null, change);
+      }
+    });
+    onNodesChange(changes);
+  };
 
   return (
     <div className="w-[100vw] h-[100vh] bg-white text-black">
       <ReactFlow
         nodes={nodes}
-        onNodesChange={onNodesChange}
+        onNodesChange={modifiedOnNodesChange}
         edges={edges}
         onEdgesChange={onEdgesChange}
         fitView
         nodeTypes={nodeTypes}
-  
+        snapToGrid={true}
+        snapGrid={snapGrid}
+        className="download-image"
       >
-        <Background />
+        <Panel position="top-left">add something similar to breadcrums for customization</Panel>
+        <Controls>
+        <ControlButton onClick={() => alert('Something magical just happened. ✨')}>
+          <SunIcon />
+        </ControlButton>
+        </Controls >
+        <Background
+        id="1"
+        gap={10}
+        color="#f1f1f1"
+        variant={BackgroundVariant.Lines}
+      />
+ 
+      <Background
+        id="2"
+        gap={100}
+        color="#ccc"
+        variant={BackgroundVariant.Lines}
+      />
+        <DownloadButton />
       </ReactFlow>
+      <Modal props={{ data: selectedNode, sideModalOpen, setSideModalOpen }} /> 
     </div>
   );
 }
