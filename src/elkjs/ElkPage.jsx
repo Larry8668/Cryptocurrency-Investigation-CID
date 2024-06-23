@@ -16,7 +16,7 @@ import { SunIcon } from '@radix-ui/react-icons'
 import ElkNode from "./ElkNode";
 import useLayoutNodes from "./useLayoutNodes";
 import { GlobalContext } from "../context/GlobalContext";
-import DownloadButton from "../utils/downloadButton"
+import DownloadButton from "../utils/DownloadButton"
 
 import Modal from "../components/modal/Modal";
 
