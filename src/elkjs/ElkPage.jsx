@@ -62,7 +62,7 @@ export function ElkPage() {
           const toAddress = item.to_address;
           console.log("From ->", fromAddress, "To ->", toAddress, "Value ->", valueInEth)
 
-          if (!nodeMap.has(fromAddress)) {
+          // if (nodeMap.has(fromAddress)) {
             const fromNode = {
               id: fromAddress,
               data: {
@@ -78,9 +78,9 @@ export function ElkPage() {
             };
             processedNodes.push(fromNode);
             nodeMap.set(fromAddress, fromNode);
-          }
+          // }
 
-          if (!nodeMap.has(toAddress)) {
+          // if (!nodeMap.has(toAddress)) {
             const toNode = {
               id: toAddress,
               data: {
@@ -96,7 +96,7 @@ export function ElkPage() {
             };
             processedNodes.push(toNode);
             nodeMap.set(toAddress, toNode);
-          }
+          // }
 
           let edgeColor = "gray";
           if (fromAddress === centralNodeAddress) {
@@ -108,7 +108,7 @@ export function ElkPage() {
           const edgeWidth = Math.min(Math.max(valueInEth * 10, 1), 10);
 
           const edgeId = `${fromAddress}-${toAddress}`;
-          if (!processedEdges.some((edge) => edge.id === edgeId)) {
+          // if (!processedEdges.some((edge) => edge.id === edgeId)) {
             const edge = {
               id: edgeId,
               source: fromAddress,
@@ -123,9 +123,10 @@ export function ElkPage() {
               },
             };
             processedEdges.push(edge);
-          }
+          // }
         });
-
+        console.log("Processed nodes ->", processedNodes);
+        console.log("Processed edges ->", processedEdges);
         setNodes(processedNodes);
         setEdges(processedEdges);
         setGraphLoaded(true);
@@ -135,7 +136,8 @@ export function ElkPage() {
     };
     fetchData();
   }, []);
-
+console.log("Nodes ->", nodes)
+console.log("Edges ->", edges)
   const handleNodeClick = (event, node) => {
     setSelectedNode(node);
     console.log("Selected node ->", node);
