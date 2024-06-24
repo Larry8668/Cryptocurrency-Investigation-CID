@@ -1,9 +1,76 @@
-import React from 'react'
+import React from "react";
+import { IoFilterOutline } from "react-icons/io5";
+import { CiBoxList } from "react-icons/ci";
+import { FaPlus } from "react-icons/fa6";
+import { CiShare2 } from "react-icons/ci";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
+import { Slider } from "@nextui-org/react";
+
+const newSearch = () => {
+  alert("New Search");
+};
+
+const filterResult = () => {
+  alert("Filter Result");
+};
+
+const listResults = () => {
+  alert("List Results");
+};
+
+const shareResults = () => {
+  alert("Share Results");
+};
+
+const options = [
+  { type: <FaPlus />, name: "New Search", onClick: newSearch },
+  { type: <IoFilterOutline />, name: "Filter Result", onClick: filterResult },
+  { type: <CiBoxList />, name: "List Results", onClick: listResults },
+  { type: <CiShare2 />, name: "Share Results", onClick: shareResults },
+];
 
 const GraphPanel = () => {
   return (
-    <div className='p-2 bg-red-400 rounded-xl'>GraphPanel</div>
-  )
-}
+    <div className="flex items-center justify-center gap-3 p-2 bg-red-300 rounded-xl text-xl">
+      {options.map((option, index) => (
+        <button
+          key={index}
+          className="flex p-1 border-2 border-black rounded-md items-center justify-center bg-transparent"
+          data-tooltip-id={option.name}
+          data-tooltip-content={option.name}
+          onClick={option.onClick}
+        >
+          {option.type}
+          <ReactTooltip
+            id={option.name}
+            place="bottom"
+            effect="solid"
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.85)",
+              color: "#fff",
+              padding: "4px 8px",
+              borderRadius: "4px",
+              fontSize: "12px",
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.3)",
+            }}
+          />
+        </button>
+      ))}
 
-export default GraphPanel
+      <Slider
+        size="sm"
+        label="Threshold"
+        step={0.01}
+        color="foreground"
+        maxValue={1}
+        minValue={0}
+        defaultValue={0.4}
+        className="w-64"
+        onChange={(value) => console.log(value)}
+      />
+    </div>
+  );
+};
+
+export default GraphPanel;
