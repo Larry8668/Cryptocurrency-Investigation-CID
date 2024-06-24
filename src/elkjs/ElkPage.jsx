@@ -21,6 +21,7 @@ import DownloadButton from "../utils/DownloadButton";
 import Modal from "../components/modal/Modal";
 
 import { SyncLoader } from "react-spinners";
+import GraphPanel from "../components/GraphPanel";
 
 const nodeTypes = {
   elk: ElkNode,
@@ -59,6 +60,7 @@ export function ElkPage() {
           if (valueInEth < threshold) return;
           const fromAddress = item.from_address;
           const toAddress = item.to_address;
+          console.log("From ->", fromAddress, "To ->", toAddress, "Value ->", valueInEth)
 
           if (!nodeMap.has(fromAddress)) {
             const fromNode = {
@@ -70,6 +72,9 @@ export function ElkPage() {
               },
               position: { x: 0, y: 0 },
               type: "elk",
+              style: {
+                minWidth: 100,
+              },
             };
             processedNodes.push(fromNode);
             nodeMap.set(fromAddress, fromNode);
@@ -85,6 +90,9 @@ export function ElkPage() {
               },
               position: { x: 50, y: 50 },
               type: "elk",
+              style: {
+                minWidth: 100,
+              },
             };
             processedNodes.push(toNode);
             nodeMap.set(toAddress, toNode);
@@ -92,12 +100,12 @@ export function ElkPage() {
 
           let edgeColor = "gray";
           if (fromAddress === centralNodeAddress) {
-            edgeColor = "red"; 
+            edgeColor = "red";
           } else if (toAddress === centralNodeAddress) {
-            edgeColor = "green"; 
+            edgeColor = "green";
           }
 
-          const edgeWidth = Math.min(Math.max(valueInEth * 10, 1), 10); 
+          const edgeWidth = Math.min(Math.max(valueInEth * 10, 1), 10);
 
           const edgeId = `${fromAddress}-${toAddress}`;
           if (!processedEdges.some((edge) => edge.id === edgeId)) {
@@ -110,8 +118,8 @@ export function ElkPage() {
               label: `${(item.value / 10 ** 18).toFixed(5)} ETH`,
               animated: true,
               style: {
-                stroke: edgeColor, 
-                strokeWidth: edgeWidth, 
+                stroke: edgeColor,
+                strokeWidth: edgeWidth,
               },
             };
             processedEdges.push(edge);
@@ -130,6 +138,7 @@ export function ElkPage() {
 
   const handleNodeClick = (event, node) => {
     setSelectedNode(node);
+    console.log("Selected node ->", node);
     setSideModalOpen(true);
   };
 
@@ -155,7 +164,7 @@ export function ElkPage() {
         onNodesChange={modifiedOnNodesChange}
         edges={edges}
         onEdgesChange={onEdgesChange}
-        fitView
+        fitView={true}
         nodeTypes={nodeTypes}
         snapToGrid={true}
         snapGrid={snapGrid}
@@ -163,7 +172,7 @@ export function ElkPage() {
       >
         {graphLoaded ? (
           <Panel position="top-left">
-            add something similar to breadcrums for customization
+            <GraphPanel />
           </Panel>
         ) : null}
         <Controls>
@@ -175,16 +184,10 @@ export function ElkPage() {
         </Controls>
         <Background
           id="1"
-          gap={10}
           color="#f1f1f1"
           variant={BackgroundVariant.Lines}
-        />
-
-        <Background
-          id="2"
-          gap={100}
-          color="#ccc"
-          variant={BackgroundVariant.Lines}
+          gap={[200, 500000]}
+          lineWidth={2}
         />
         <DownloadButton />
       </ReactFlow>
