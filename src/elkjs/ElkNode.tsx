@@ -4,7 +4,7 @@ import { ElkNodeData } from './nodes';
 
 export default function ElkNode({ data }: NodeProps<ElkNodeData>) {
   return (
-    <>
+    <div className='border border-black rounded-md'>
       <div className="handles targets">
         {data.targetHandles.map((handle) => (
           <Handle
@@ -26,6 +26,6 @@ export default function ElkNode({ data }: NodeProps<ElkNodeData>) {
           />
         ))}
       </div>
-    </>
+    </div>
   );
 }

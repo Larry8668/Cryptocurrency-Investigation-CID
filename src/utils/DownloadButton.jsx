@@ -1,6 +1,7 @@
 import React from 'react';
 import { Panel, useReactFlow, getRectOfNodes, getTransformForBounds } from 'reactflow';
 import { toPng } from 'html-to-image';
+import { FaDownload } from "react-icons/fa6";
 
 function downloadImage(dataUrl) {
   const a = document.createElement('a');
@@ -33,8 +34,8 @@ function DownloadButton() {
 
   return (
     <Panel position="top-right">
-      <button className="bg-transparent text-black border border-black rounded-lg" onClick={onClick}>
-        Download Image
+      <button className="bg-white text-black border-2 border-black rounded-lg" onClick={onClick}>
+      <FaDownload />
       </button>
     </Panel>
   );
