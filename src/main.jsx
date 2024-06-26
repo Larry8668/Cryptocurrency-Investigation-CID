@@ -32,6 +32,10 @@ const router = createBrowserRouter([
     path: "/elkjs",
     element: <ElkPage />,
   },
+  {
+    path: "elkjs/:centralNodeAddress",
+    element: <ElkPage />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
