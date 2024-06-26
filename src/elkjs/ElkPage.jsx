@@ -107,7 +107,7 @@ export function ElkPage() {
       if (fromAddress === centralNodeAddress) edgeColor = "red";
       else if (toAddress === centralNodeAddress) edgeColor = "green";
 
-      const edgeWidth = Math.min(Math.max(valueInEth * 10, 1), 10);
+      const edgeWidth = Math.min(Math.max(valueInEth * 5, 1), 5);
       const edgeId = `${fromAddress}-${toAddress}`;
 
       if (!processedEdges.some((edge) => edge.id === edgeId)) {
