@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext} from "react";
 import { IoFilterOutline } from "react-icons/io5";
 import { CiBoxList } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
@@ -6,6 +6,7 @@ import { CiShare2 } from "react-icons/ci";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import { Slider } from "@nextui-org/react";
+import { GlobalContext } from "../context/GlobalContext";
 
 const newSearch = () => {
   alert("New Search");
@@ -31,6 +32,7 @@ const options = [
 ];
 
 const GraphPanel = () => {
+  const { thresholdValue, setThresholdValue } = useContext(GlobalContext);
   return (
     <div className="flex items-center justify-center gap-3 p-2 bg-red-300 rounded-xl text-xl">
       {options.map((option, index) => (
@@ -61,13 +63,16 @@ const GraphPanel = () => {
       <Slider
         size="sm"
         label="Threshold"
-        step={0.01}
+        step={0.0001}
         color="foreground"
         maxValue={1}
         minValue={0}
         defaultValue={0.4}
         className="w-64"
-        onChange={(value) => console.log(value)}
+        onChange={(value) => {
+          console.log(value);
+          setThresholdValue(value);
+        }}
       />
     </div>
   );

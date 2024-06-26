@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import React, { useEffect, useContext, useState, useMemo } from "react";
 import ReactFlow, {
   Controls,
   Background,
@@ -9,9 +9,15 @@ import ReactFlow, {
   Panel,
 } from "reactflow";
 
+import GraphOverlay from "../components/GraphOverlay";
+
+import { useNavigate, useParams } from "react-router-dom";
+
 import "reactflow/dist/style.css";
 import "../index.css";
 import { SunIcon } from "@radix-ui/react-icons";
+
+import { Toaster, toast } from "sonner";
 
 import ElkNode from "./ElkNode";
 import useLayoutNodes from "./useLayoutNodes";
@@ -20,25 +26,43 @@ import DownloadButton from "../utils/DownloadButton";
 
 import Modal from "../components/modal/Modal";
 
-import { SyncLoader } from "react-spinners";
 import GraphPanel from "../components/GraphPanel";
 
 const nodeTypes = {
   elk: ElkNode,
 };
 
-const centralNodeAddress = "0xa336033fc39a359e375007e75af49768e98d0790";
+// const centralNodeAddress = "0xa336033fc39a359e375007e75af49768e98d0790";
 const snapGrid = [50, 25];
 
 export function ElkPage() {
-  const { sideModalOpen, setSideModalOpen, selectedNode, setSelectedNode } =
-    useContext(GlobalContext);
+  const {
+    sideModalOpen,
+    setSideModalOpen,
+    selectedNode,
+    setSelectedNode,
+    thresholdValue,
+  } = useContext(GlobalContext);
+
+  const [selectedChain, setSelectedChain] = useState(new Set(["ETH"]));
+  const [search, setSearch] = useState("");
+  const [apiData, setApiData] = useState([]);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [graphLoaded, setGraphLoaded] = useState(false);
 
+  const selectedValue = useMemo(
+    () => Array.from(selectedChain).join(", ").replaceAll("_", " "),
+    [selectedChain]
+  );
+
+  let { centralNodeAddress } = useParams();
+  const navigate = useNavigate();
+
   useLayoutNodes();
+
   useEffect(() => {
+    if (!centralNodeAddress) return;
     const fetchData = async () => {
       try {
         setGraphLoaded(false);
@@ -47,55 +71,63 @@ export function ElkPage() {
         );
         const data = await response.json();
         console.log("API data ->", data.result);
+        setApiData(data.result);
 
         const formatAddress = (address) =>
           `${address.slice(0, 5)}...${address.slice(-5)}`;
         const processedNodes = [];
         const processedEdges = [];
         const nodeMap = new Map();
-        const threshold = 0.00001;
+        const threshold = thresholdValue;
 
         data.result.forEach((item) => {
           const valueInEth = item.value / 10 ** 18;
           if (valueInEth < threshold) return;
           const fromAddress = item.from_address;
           const toAddress = item.to_address;
-          console.log("From ->", fromAddress, "To ->", toAddress, "Value ->", valueInEth)
+          console.log(
+            "From ->",
+            fromAddress,
+            "To ->",
+            toAddress,
+            "Value ->",
+            valueInEth
+          );
 
           // if (nodeMap.has(fromAddress)) {
-            const fromNode = {
-              id: fromAddress,
-              data: {
-                label: formatAddress(fromAddress),
-                sourceHandles: [{ id: `${fromAddress}-s` }],
-                targetHandles: [{ id: `${fromAddress}-t` }],
-              },
-              position: { x: 0, y: 0 },
-              type: "elk",
-              style: {
-                minWidth: 100,
-              },
-            };
-            processedNodes.push(fromNode);
-            nodeMap.set(fromAddress, fromNode);
+          const fromNode = {
+            id: fromAddress,
+            data: {
+              label: formatAddress(fromAddress),
+              sourceHandles: [{ id: `${fromAddress}-s` }],
+              targetHandles: [{ id: `${fromAddress}-t` }],
+            },
+            position: { x: 0, y: 0 },
+            type: "elk",
+            style: {
+              minWidth: 100,
+            },
+          };
+          processedNodes.push(fromNode);
+          nodeMap.set(fromAddress, fromNode);
           // }
 
           // if (!nodeMap.has(toAddress)) {
-            const toNode = {
-              id: toAddress,
-              data: {
-                label: formatAddress(toAddress),
-                sourceHandles: [{ id: `${toAddress}-s` }],
-                targetHandles: [{ id: `${toAddress}-t` }],
-              },
-              position: { x: 50, y: 50 },
-              type: "elk",
-              style: {
-                minWidth: 100,
-              },
-            };
-            processedNodes.push(toNode);
-            nodeMap.set(toAddress, toNode);
+          const toNode = {
+            id: toAddress,
+            data: {
+              label: formatAddress(toAddress),
+              sourceHandles: [{ id: `${toAddress}-s` }],
+              targetHandles: [{ id: `${toAddress}-t` }],
+            },
+            position: { x: 50, y: 50 },
+            type: "elk",
+            style: {
+              minWidth: 100,
+            },
+          };
+          processedNodes.push(toNode);
+          nodeMap.set(toAddress, toNode);
           // }
 
           let edgeColor = "gray";
@@ -109,20 +141,20 @@ export function ElkPage() {
 
           const edgeId = `${fromAddress}-${toAddress}`;
           // if (!processedEdges.some((edge) => edge.id === edgeId)) {
-            const edge = {
-              id: edgeId,
-              source: fromAddress,
-              sourceHandle: `${fromAddress}-s`,
-              target: toAddress,
-              targetHandle: `${toAddress}-t`,
-              label: `${(item.value / 10 ** 18).toFixed(5)} ETH`,
-              animated: true,
-              style: {
-                stroke: edgeColor,
-                strokeWidth: edgeWidth,
-              },
-            };
-            processedEdges.push(edge);
+          const edge = {
+            id: edgeId,
+            source: fromAddress,
+            sourceHandle: `${fromAddress}-s`,
+            target: toAddress,
+            targetHandle: `${toAddress}-t`,
+            label: `${(item.value / 10 ** 18).toFixed(5)} ETH`,
+            animated: true,
+            style: {
+              stroke: edgeColor,
+              strokeWidth: edgeWidth,
+            },
+          };
+          processedEdges.push(edge);
           // }
         });
         console.log("Processed nodes ->", processedNodes);
@@ -135,13 +167,113 @@ export function ElkPage() {
       }
     };
     fetchData();
-  }, []);
-console.log("Nodes ->", nodes)
-console.log("Edges ->", edges)
+  }, [centralNodeAddress]);
+
+  useEffect(() => {
+    if (!apiData.length) return;
+    setGraphLoaded(false);
+    const data = apiData;
+    const formatAddress = (address) =>
+      `${address.slice(0, 5)}...${address.slice(-5)}`;
+    const processedNodes = [];
+    const processedEdges = [];
+    const nodeMap = new Map();
+    const threshold = thresholdValue;
+
+    data.forEach((item) => {
+      const valueInEth = item.value / 10 ** 18;
+      if (valueInEth < threshold) return;
+      const fromAddress = item.from_address;
+      const toAddress = item.to_address;
+      console.log(
+        "From ->",
+        fromAddress,
+        "To ->",
+        toAddress,
+        "Value ->",
+        valueInEth
+      );
+
+      // if (nodeMap.has(fromAddress)) {
+      const fromNode = {
+        id: fromAddress,
+        data: {
+          label: formatAddress(fromAddress),
+          sourceHandles: [{ id: `${fromAddress}-s` }],
+          targetHandles: [{ id: `${fromAddress}-t` }],
+        },
+        position: { x: 0, y: 0 },
+        type: "elk",
+        style: {
+          minWidth: 100,
+        },
+      };
+      processedNodes.push(fromNode);
+      nodeMap.set(fromAddress, fromNode);
+      // }
+
+      // if (!nodeMap.has(toAddress)) {
+      const toNode = {
+        id: toAddress,
+        data: {
+          label: formatAddress(toAddress),
+          sourceHandles: [{ id: `${toAddress}-s` }],
+          targetHandles: [{ id: `${toAddress}-t` }],
+        },
+        position: { x: 50, y: 50 },
+        type: "elk",
+        style: {
+          minWidth: 100,
+        },
+      };
+      processedNodes.push(toNode);
+      nodeMap.set(toAddress, toNode);
+      // }
+
+      let edgeColor = "gray";
+      if (fromAddress === centralNodeAddress) {
+        edgeColor = "red";
+      } else if (toAddress === centralNodeAddress) {
+        edgeColor = "green";
+      }
+
+      const edgeWidth = Math.min(Math.max(valueInEth * 10, 1), 10);
+
+      const edgeId = `${fromAddress}-${toAddress}`;
+      // if (!processedEdges.some((edge) => edge.id === edgeId)) {
+      const edge = {
+        id: edgeId,
+        source: fromAddress,
+        sourceHandle: `${fromAddress}-s`,
+        target: toAddress,
+        targetHandle: `${toAddress}-t`,
+        label: `${(item.value / 10 ** 18).toFixed(5)} ETH`,
+        animated: true,
+        style: {
+          stroke: edgeColor,
+          strokeWidth: edgeWidth,
+        },
+      };
+      processedEdges.push(edge);
+      // }
+    });
+    console.log("Processed nodes ->", processedNodes);
+    console.log("Processed edges ->", processedEdges);
+    setNodes(processedNodes);
+    setEdges(processedEdges);
+    setGraphLoaded(true);
+  }, [thresholdValue]);
+  console.log("Nodes ->", nodes);
+  console.log("Edges ->", edges);
   const handleNodeClick = (event, node) => {
     setSelectedNode(node);
     console.log("Selected node ->", node);
     setSideModalOpen(true);
+  };
+
+  const handleSearch = () => {
+    if (search.length === 0) return;
+    navigate(`/elkjs/${search}`);
   };
 
   const modifiedOnNodesChange = (changes) => {
@@ -156,10 +288,14 @@ console.log("Edges ->", edges)
   return (
     <div className="w-[100vw] h-[100vh] bg-white text-black">
       {graphLoaded ? null : (
-        <div className="absolute h-full w-full z-10 backdrop-blur-sm bg-slate-400/10 flex gap-10 justify-center items-center text-2xl">
-          {" "}
-          <SyncLoader size={10} /> Fetching details...
-        </div>
+        <GraphOverlay
+          centralNodeAddress={centralNodeAddress}
+          selectedValue={selectedValue}
+          selectedChain={selectedChain}
+          setSelectedChain={setSelectedChain}
+          setSearch={setSearch}
+          handleSearch={handleSearch}
+        />
       )}
       <ReactFlow
         nodes={nodes}
@@ -194,12 +330,10 @@ console.log("Edges ->", edges)
         <DownloadButton />
       </ReactFlow>
       <Modal props={{ data: selectedNode, sideModalOpen, setSideModalOpen }} />
+      <Toaster position="bottom-center" />
     </div>
   );
 }
-
-
-
 
 // import React, { useEffect, useContext, useState } from "react";
 // import ReactFlow, {
