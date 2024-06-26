@@ -66,11 +66,11 @@ const GraphPanel = () => {
       <Slider
         size="sm"
         label="Threshold"
-        step={0.0001}
+        step={0.00001}
         color="foreground"
         maxValue={1}
         minValue={0}
-        defaultValue={0.4}
+        defaultValue={0.0001}
         className="w-64"
         onChange={(value) => {
           console.log(value);

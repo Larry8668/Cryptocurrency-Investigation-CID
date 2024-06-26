@@ -90,7 +90,7 @@ export default function useLayoutNodes() {
         );
 
         setNodes(layoutedNodes);
-        setTimeout(() => fitView(), 0);
+        setTimeout(() => fitView(), 50);
       };
 
       layoutNodes();
