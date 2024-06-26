@@ -1,4 +1,4 @@
-import React, {useContext} from "react";
+import React, {useState, useContext} from "react";
 import { IoFilterOutline } from "react-icons/io5";
 import { CiBoxList } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
@@ -7,34 +7,37 @@ import { Tooltip as ReactTooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
 import { Slider } from "@nextui-org/react";
 import { GlobalContext } from "../context/GlobalContext";
+import SearchModal from "./modal/SearchModal";
 
-const newSearch = () => {
-  alert("New Search");
-};
 
-const filterResult = () => {
-  alert("Filter Result");
-};
-
-const listResults = () => {
-  alert("List Results");
-};
-
-const shareResults = () => {
-  alert("Share Results");
-};
-
-const options = [
-  { type: <FaPlus />, name: "New Search", onClick: newSearch },
-  { type: <IoFilterOutline />, name: "Filter Result", onClick: filterResult },
-  { type: <CiBoxList />, name: "List Results", onClick: listResults },
-  { type: <CiShare2 />, name: "Share Results", onClick: shareResults },
-];
 
 const GraphPanel = () => {
   const { thresholdValue, setThresholdValue } = useContext(GlobalContext);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const newSearch = () => {
+    setIsModalOpen((curr)=>!curr);
+  };
+  
+  const filterResult = () => {
+    alert("Filter Result");
+  };
+  
+  const listResults = () => {
+    alert("List Results");
+  };
+  
+  const shareResults = () => {
+    alert("Share Results");
+  };
+  const options = [
+    { type: <FaPlus />, name: "New Search", onClick: newSearch },
+    { type: <IoFilterOutline />, name: "Filter Result", onClick: filterResult },
+    { type: <CiBoxList />, name: "List Results", onClick: listResults },
+    { type: <CiShare2 />, name: "Share Results", onClick: shareResults },
+  ];
   return (
     <div className="flex items-center justify-center gap-3 p-2 bg-red-300 rounded-xl text-xl">
+      <SearchModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       {options.map((option, index) => (
         <button
           key={index}
