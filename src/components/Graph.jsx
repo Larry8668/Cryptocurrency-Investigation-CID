@@ -3,30 +3,30 @@ import Network from "react-vis-network-graph";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Spinner } from "@nextui-org/react";
-import binance from "/binance.png";
-import lido from "/lido.png";
-import coinbase from "/coinbase.png";
-import metamask from "/metamask.png";
-import uniswap from "/uniswap.png";
-import pepe from "/pepe.png";
-import beaverbuild from "/beaverbuild.jpg";
-import ethereum from "/ethereum.png";
-import bitcoin from "/bitcoin.png";
-import walton from "/walton.png";
-import fetchai from "/fetchai.png";
+import binance from "/cid/binance.png";
+// import lido from "/lido.png";
+import coinbase from "/cid/coinbase.png";
+// import metamask from "/metamask.png";
+import uniswap from "/cid/uniswap.png";
+import pepe from "/cid/pepe.png";
+// import beaverbuild from "/beaverbuild.jpg";
+import ethereum from "/cid/ethcoin.png";
+import bitcoin from "/cid/bitcoin.png";
+// import walton from "/walton.png";
+// import fetchai from "/fetchai.png";
 
 const imageMap = {
   "Uniswap: Universal Router": uniswap,
   "Pepe (PEPE)": pepe,
-  beaverbuild: beaverbuild,
-  "Metamask: Swap Router": metamask,
+  // "beaverbuild": beaverbuild,
+  // "Metamask: Swap Router": metamask,
   "Coinbase: Wallet": coinbase,
-  "Lido: Staking": lido,
+  // "Lido: Staking": lido,
   "Binance 7": binance,
   defaultImage: ethereum,
-  bitcoin: bitcoin,
-  "Walton (WTC)": walton,
-  "Fetch.ai: Old FET Token": fetchai,
+  "bitcoin": bitcoin,
+  // "Walton (WTC)": walton,
+  // "Fetch.ai: Old FET Token": fetchai,
 };
 import {
   Modal,
