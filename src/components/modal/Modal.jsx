@@ -5,6 +5,9 @@ import LineGraph from "../charts/Line";
 import CircleGraph from "../charts/Circle";
 import LoadingDisplay from "../../utils/LoadingDisplay";
 import DownloadExcelButton from "../../utils/DownloadExcel";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { FaCopy } from "react-icons/fa6";
+import {toast} from "sonner";
 
 const graphData = [
   { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
@@ -115,16 +118,35 @@ const Modal = ({ props }) => {
                 />
               </span>
               <div className="text-left">
-                <h4 className="text-md font-semibold mt-2 mb-4">
-                  Wallet address: {data?.id}
-                </h4>
-                <h4 className="text-md font-semibold mt-2 mb-4">
+                <div className="flex flex-col gap-2 justify-center items-start">
+                  <div className="text-xl font-semibold mt-2">
+                    Wallet address:{" "}
+                  </div>
+                  <div className="w-full flex justify-between items-center gap-2 p-1 rounded-md bg-slate-400">
+                    <div className="bg-white p-1 px-2 rounded-md">
+                      {data?.id}
+                    </div>
+                    <CopyToClipboard
+                      text={data?.id}
+                      onCopy={() => {
+                        toast.success("Copied to clipboard!");
+                        this.setState({ copied: true });
+                      }}
+                    >
+                      <span className="p-1 cursor-pointer border-2 border-black rounded-md">
+                        <FaCopy />
+                      </span>
+                    </CopyToClipboard>
+                  </div>
+                </div>
+
+                <div className="text-md font-semibold mt-2 mb-4">
                   Wallet balance: {(walletData?.balance / 10 ** 18).toFixed(4)}{" "}
                   ETH
-                </h4>
-                <h4 className="text-md font-semibold mt-2 mb-4">
+                </div>
+                <div className="text-md font-semibold mt-2 mb-4">
                   Wallet ERC20: {walletData?.erctokens}
-                </h4>
+                </div>
               </div>
             </div>
             {data?.exchange ? (

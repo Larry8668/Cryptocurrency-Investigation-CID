@@ -4,8 +4,9 @@ import { CiBoxList } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
 import { CiShare2 } from "react-icons/ci";
 import { Tooltip as ReactTooltip } from "react-tooltip";
+import { IoHomeOutline } from "react-icons/io5";
 import "react-tooltip/dist/react-tooltip.css";
-import { Slider } from "@nextui-org/react";
+// import { Slider } from "@nextui-org/react";
 import { GlobalContext } from "../context/GlobalContext";
 import SearchModal from "./modal/SearchModal";
 
@@ -17,6 +18,10 @@ const GraphPanel = () => {
   const newSearch = () => {
     setIsModalOpen((curr)=>!curr);
   };
+
+  const goHome = () =>{
+    window.location.href = "/elkjs";
+  }
   
   const filterResult = () => {
     alert("Filter Result");
@@ -31,12 +36,13 @@ const GraphPanel = () => {
   };
   const options = [
     { type: <FaPlus />, name: "New Search", onClick: newSearch },
+    { type: <IoHomeOutline />, name: "Home", onClick: goHome },
     { type: <IoFilterOutline />, name: "Filter Result", onClick: filterResult },
     { type: <CiBoxList />, name: "List Results", onClick: listResults },
     { type: <CiShare2 />, name: "Share Results", onClick: shareResults },
   ];
   return (
-    <div className="flex items-center justify-center gap-3 p-2 bg-red-300 rounded-xl text-xl">
+    <div className="flex items-center justify-center gap-3 p-2 pr-4 bg-red-300 rounded-xl text-xl">
       <SearchModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
       {options.map((option, index) => (
         <button
@@ -63,20 +69,20 @@ const GraphPanel = () => {
         </button>
       ))}
 
-      <Slider
+      {/* <Slider
         size="sm"
         label="Threshold"
-        step={0.0001}
+        step={0.00001}
         color="foreground"
         maxValue={1}
         minValue={0}
-        defaultValue={0.4}
+        defaultValue={0.0001}
         className="w-64"
         onChange={(value) => {
           console.log(value);
           setThresholdValue(value);
         }}
-      />
+      /> */}
     </div>
   );
 };
