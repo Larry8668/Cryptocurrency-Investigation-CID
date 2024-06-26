@@ -14,6 +14,7 @@ import {
   import "../index.css";
   import { FaCopy } from "react-icons/fa6";
   import { FaEthereum, FaBitcoin } from "react-icons/fa";
+  import { FaChevronDown } from "react-icons/fa6";
   
   import { toast } from "sonner";
   
@@ -26,10 +27,12 @@ const GraphOverlay = ({centralNodeAddress, selectedValue, selectedChain, setSele
         <div className="flex flex-col justify-center items-center gap-10 text-4xl">
           Start Investigation 🔎
           <div className="flex justify-center items-center gap-5">
-            <Dropdown className="border-slate-400">
+            <div className="flex flex-col justify-center items-center">
+              <div className="text-sm text-slate-500">Chains</div>
+              <Dropdown className="border-black">
               <DropdownTrigger>
                 <Button variant="bordered" className="capitalize">
-                  {selectedValue}
+                  {selectedValue}<FaChevronDown />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu
@@ -56,6 +59,7 @@ const GraphOverlay = ({centralNodeAddress, selectedValue, selectedChain, setSele
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
+            </div>
             <Input
               type="text"
               color="secondary"
