@@ -29,8 +29,8 @@
   <img width="500" alt="Something was supposed to be here as well 🤨" src="https://github.com/Larry8668/Cryptocurrency-Investigation-CID/assets/114809719/06245e3b-4829-4ae6-b833-3c1c1fc0f508">
 </div>
 <div align="center">
-  <img width="500" alt="Something was supposed to be here as well 🤨" src="https://github.com/Larry8668/Cryptocurrency-Investigation-CID/assets/114809719/cfd1c43a-0b13-4969-afe1-1c13db39d4ac">
-  <img width="500" alt="Something was supposed to be here as well 🤨" src="https://github.com/Larry8668/Cryptocurrency-Investigation-CID/assets/114809719/628620b4-714d-41b5-8170-4dd567d2c322">
+  <img width="250" alt="Something was supposed to be here as well 🤨" src="https://github.com/Larry8668/Cryptocurrency-Investigation-CID/assets/114809719/cfd1c43a-0b13-4969-afe1-1c13db39d4ac">
+  <img width="250" alt="Something was supposed to be here as well 🤨" src="https://github.com/Larry8668/Cryptocurrency-Investigation-CID/assets/114809719/628620b4-714d-41b5-8170-4dd567d2c322">
 </div>
 
 ---
