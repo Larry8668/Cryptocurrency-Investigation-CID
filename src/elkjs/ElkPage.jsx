@@ -46,7 +46,7 @@ export function ElkPage() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [graphLoaded, setGraphLoaded] = useState(false);
 
-  const selectedValue = useMemo(
+  const selectedValue =useMemo(
     () => Array.from(selectedChain).join(", ").replaceAll("_", " "),
     [selectedChain]
   );
@@ -55,92 +55,6 @@ export function ElkPage() {
   const navigate = useNavigate();
 
   useLayoutNodes();
-
-  // //with central node different from the rest
-  // // Utility function to process nodes and edges
-  // const processGraphData = (data, threshold, centralNodeAddress) => {
-  //   const formatAddress = (address) => `${address.slice(0, 5)}...${address.slice(-5)}`;
-  //   const processedNodes = [];
-  //   const processedEdges = [];
-  //   const nodeMap = new Map();
-  
-  //   data.forEach((item) => {
-  //     const valueInEth = item.value / 10 ** 18;
-  //     if (valueInEth < threshold) return;
-  
-  //     const fromAddress = item.from_address;
-  //     const toAddress = item.to_address;
-  
-  //     // Determine the position of nodes based on their relation to the central node
-  //     const isCentralNode = (address) => address === centralNodeAddress;
-
-  //     const positionX = isCentralNode(fromAddress) ? 400 : -400; // Central node on x=0, left nodes on x=-200, right nodes on x=200
-  //     const positionY = 0; // Start with 0, can be adjusted for better visualization
-  
-  //     // Create or update the fromNode
-  //     if (!nodeMap.has(fromAddress)) {
-  //       const fromNode = {
-  //         id: fromAddress,
-  //         data: {
-  //           label: `${isCentralNode(fromAddress) ?">" :"" } ${formatAddress(fromAddress)} ${isCentralNode(fromAddress) ? "<" : ""}`,
-  //           sourceHandles: [{ id: `${fromAddress}-s` }],
-  //           targetHandles: [{ id: `${fromAddress}-t` }],
-  //         },
-  //         position: { x: isCentralNode(fromAddress) ? 0 : positionX, y: positionY },
-  //         type: "elk",
-  //         style: {
-  //           minWidth: 100,
-  //           textDecoration: isCentralNode(fromAddress) ? "underline" : "none", // Underline the central node
-  //         },
-  //       };
-  //       processedNodes.push(fromNode);
-  //       nodeMap.set(fromAddress, fromNode);
-  //     }
-
-  //     // Create or update the toNode
-  //     if (!nodeMap.has(toAddress)) {
-  //       const toNode = {
-  //         id: toAddress,
-  //         data: {
-  //           label: `${isCentralNode(toAddress) ?">" :"" } ${formatAddress(toAddress)} ${isCentralNode(toAddress) ? "<" : ""} `,
-  //           sourceHandles: [{ id: `${toAddress}-s` }],
-  //           targetHandles: [{ id: `${toAddress}-t` }],
-  //         },
-  //         position: { x: isCentralNode(toAddress) ? 0 : -positionX, y: positionY },
-  //         type: "elk",
-  //         style: {
-  //           minWidth: 100,
-  //           textDecoration: isCentralNode(toAddress) ? "underline" : "none", // Underline the central node
-  //         },
-  //       };
-  //       processedNodes.push(toNode);
-  //       nodeMap.set(toAddress, toNode);
-  //     }
-  
-  //     let edgeColor = "gray";
-  //     if (fromAddress === centralNodeAddress) edgeColor = "red";
-  //     else if (toAddress === centralNodeAddress) edgeColor = "green";
-  
-  //     const edgeWidth = Math.min(Math.max(valueInEth * 5, 1), 5);
-  //     const edgeId = `${fromAddress}-${toAddress}`;
-  
-  //     if (!processedEdges.some((edge) => edge.id === edgeId)) {
-  //       const edge = {
-  //         id: edgeId,
-  //         source: fromAddress,
-  //         sourceHandle: `${fromAddress}-s`,
-  //         target: toAddress,
-  //         targetHandle: `${toAddress}-t`,
-  //         label: `${valueInEth.toFixed(5)} ETH`,
-  //         animated: true,
-  //         style: { stroke: edgeColor, strokeWidth: edgeWidth },
-  //       };
-  //       processedEdges.push(edge);
-  //     }
-  //   });
-  
-  //   return { nodes: processedNodes, edges: processedEdges };
-  // };
 
   const processGraphData = (data, threshold, centralNodeAddress) => {
     const formatAddress = (address) => `${address.slice(0, 5)}...${address.slice(-5)}`;
