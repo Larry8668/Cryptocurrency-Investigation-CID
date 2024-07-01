@@ -74,20 +74,26 @@ const Modal = ({ props }) => {
   useEffect(() => {
     console.log("Modal data: ", data);
   }, [data]);
+  console.log("Modal data: ", data);
+  let walletAddress = data?.id.slice(0,42);
+
 
   const walletDetails = async () => {
     if (data?.id) {
       const response = await fetch(
-        `https://onchainanalysis.vercel.app/api/crypto/${data?.id}`
+        `https://onchainanalysis.vercel.app/api/crypto/${walletAddress}`
       );
       const details = await response.json();
+
       setWalletData(details);
       console.log(details);
+
     }
   };
   useEffect(() => {
     walletDetails();
   }, [data]);
+  console.log("Wallet data: ", walletAddress);
 
   return (
     <div
@@ -124,10 +130,10 @@ const Modal = ({ props }) => {
                   </div>
                   <div className="w-full flex justify-between items-center gap-2 p-1 rounded-md bg-slate-400">
                     <div className="bg-white p-1 px-2 rounded-md">
-                      {data?.id}
+                      {walletAddress}
                     </div>
                     <CopyToClipboard
-                      text={data?.id}
+                      text={walletAddress}
                       onCopy={() => {
                         toast.success("Copied to clipboard!");
                         this.setState({ copied: true });

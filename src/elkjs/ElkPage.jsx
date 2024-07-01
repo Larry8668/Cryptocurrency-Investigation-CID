@@ -46,7 +46,7 @@ export function ElkPage() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [graphLoaded, setGraphLoaded] = useState(false);
 
-  const selectedValue = useMemo(
+  const selectedValue =useMemo(
     () => Array.from(selectedChain).join(", ").replaceAll("_", " "),
     [selectedChain]
   );
@@ -56,79 +56,97 @@ export function ElkPage() {
 
   useLayoutNodes();
 
-  // Utility function to process nodes and edges
   const processGraphData = (data, threshold, centralNodeAddress) => {
     const formatAddress = (address) => `${address.slice(0, 5)}...${address.slice(-5)}`;
     const processedNodes = [];
     const processedEdges = [];
-    const nodeMap = new Map();
-
+    const nodeTracker = new Set(); // To track unique node positions
+  
     data.forEach((item) => {
       const valueInEth = item.value / 10 ** 18;
       if (valueInEth < threshold) return;
-
+  
       const fromAddress = item.from_address;
       const toAddress = item.to_address;
-
-      // Create or update the fromNode
-      if (!nodeMap.has(fromAddress)) {
+  
+      // Differentiate node IDs for duplicates
+      const fromNodeID = fromAddress === centralNodeAddress ? fromAddress : `${fromAddress}-from`;
+      const toNodeID = toAddress === centralNodeAddress ? toAddress : `${toAddress}-to`;
+  
+      // Determine the node positions
+      const fromPositionX = fromAddress === centralNodeAddress ? 0 : -200;
+      const toPositionX = toAddress === centralNodeAddress ? 0 : 200;
+  
+      // Create the fromNode if not already created for the current context
+      if (!nodeTracker.has(fromNodeID)) {
         const fromNode = {
-          id: fromAddress,
+          id: fromNodeID,
+          name: fromAddress,
           data: {
             label: formatAddress(fromAddress),
-            sourceHandles: [{ id: `${fromAddress}-s` }],
-            targetHandles: [{ id: `${fromAddress}-t` }],
+            sourceHandles: [{ id: `${fromNodeID}-s` }],
+            targetHandles: [{ id: `${fromNodeID}-t` }],
           },
-          position: { x: 0, y: 0 }, // Position will be updated by layout
+          position: { x: fromPositionX, y: 0 }, // Position will be updated by layout
           type: "elk",
-          style: { minWidth: 100 },
+          style: {
+            minWidth: 100,
+            textDecoration: fromAddress === centralNodeAddress ? "underline" : "none",
+            textUnderlineOffset: fromAddress === centralNodeAddress ? "2px" : "0",
+            backgroundColor: fromAddress === centralNodeAddress ? "#fca5a5" : "white", 
+          },
         };
         processedNodes.push(fromNode);
-        nodeMap.set(fromAddress, fromNode);
+        nodeTracker.add(fromNodeID);
       }
-
-      // Create or update the toNode
-      if (!nodeMap.has(toAddress)) {
+  
+      // Create the toNode if not already created for the current context
+      if (!nodeTracker.has(toNodeID)) {
         const toNode = {
-          id: toAddress,
+          id: toNodeID,
+          name: toAddress,
           data: {
             label: formatAddress(toAddress),
-            sourceHandles: [{ id: `${toAddress}-s` }],
-            targetHandles: [{ id: `${toAddress}-t` }],
+            sourceHandles: [{ id: `${toNodeID}-s` }],
+            targetHandles: [{ id: `${toNodeID}-t` }],
           },
-          position: { x: 50, y: 50 }, // Position will be updated by layout
+          position: { x: toPositionX, y: 0 }, // Position will be updated by layout
           type: "elk",
-          style: { minWidth: 100 },
+          style: {
+            minWidth: 100,
+            textDecoration: toAddress === centralNodeAddress ? "underline" : "none",
+          },
         };
         processedNodes.push(toNode);
-        nodeMap.set(toAddress, toNode);
+        nodeTracker.add(toNodeID);
       }
-
+  
       let edgeColor = "gray";
       if (fromAddress === centralNodeAddress) edgeColor = "red";
       else if (toAddress === centralNodeAddress) edgeColor = "green";
-
+  
       const edgeWidth = Math.min(Math.max(valueInEth * 5, 1), 5);
-      const edgeId = `${fromAddress}-${toAddress}`;
-
+      const edgeId = `${fromNodeID}-${toNodeID}`;
+  
       if (!processedEdges.some((edge) => edge.id === edgeId)) {
         const edge = {
           id: edgeId,
-          source: fromAddress,
-          sourceHandle: `${fromAddress}-s`,
-          target: toAddress,
-          targetHandle: `${toAddress}-t`,
+          source: fromNodeID,
+          sourceHandle: `${fromNodeID}-s`,
+          target: toNodeID,
+          targetHandle: `${toNodeID}-t`,
           label: `${valueInEth.toFixed(5)} ETH`,
           animated: true,
-          style: { stroke: edgeColor, strokeWidth: edgeWidth },
+          style: { stroke: edgeColor, strokeWidth: edgeWidth, color: 'grey' },
         };
         processedEdges.push(edge);
       }
     });
-
+  
     return { nodes: processedNodes, edges: processedEdges };
   };
-
+  
+  
   // Fetch data when centralNodeAddress changes
   useEffect(() => {
     if (!centralNodeAddress) return;
@@ -180,6 +198,8 @@ export function ElkPage() {
 
   const modifiedOnNodesChange = (changes) => {
     changes.forEach((change) => {
+      console.log(change.type)
+      if(change.type=="position") return;
       if (change.type === "select") {
         handleNodeClick(null, change);
       }
