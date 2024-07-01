@@ -19,9 +19,9 @@ const LandingPageComponent = () => {
                 <p className="text-neutral-500 max-w-xl mx-auto  text-sm md:text-lg text-center relative z-10">
                 Your end-to-end cryptocurrency tracker. A descriptive currency tracker using the wallet ID. Get graphical representation, realtime monitoring of wallets, mail in case of suspicious activity and finally, export transaction csv file locally to your system.
                 </p>
-                <div className="flex flex-row gap-4 items-center justify-center">
+                <div className="flex flex-col md:flex-row gap-2 md:gap-4 items-center justify-center mt-4">
                 <Link to="/search">
-                        <div className="flex flex-row items-center justify-center gap-4 p-2 m-2">
+                        <div className="flex flex-row items-center justify-center gap-4">
                             <button className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6  text-white inline-block">
                                 <span className="absolute inset-0 overflow-hidden rounded-full">
                                     <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
@@ -49,7 +49,7 @@ const LandingPageComponent = () => {
                         </div>
                     </Link>
                     <Link to="/test">
-                        <div className="flex flex-row items-center justify-center gap-4 p-2 m-2">
+                        <div className="flex flex-row items-center justify-center gap-4">
                             <button className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6  text-white inline-block">
                                 <span className="absolute inset-0 overflow-hidden rounded-full">
                                     <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>
@@ -77,7 +77,7 @@ const LandingPageComponent = () => {
                         </div>
                     </Link>
                     <Link to="/elkjs">
-                        <div className="flex flex-row items-center justify-center gap-4 p-2 m-2">
+                        <div className="flex flex-row items-center justify-center gap-4">
                             <button className="bg-slate-800 no-underline group cursor-pointer relative shadow-2xl shadow-zinc-900 rounded-full p-px text-xs font-semibold leading-6  text-white inline-block">
                                 <span className="absolute inset-0 overflow-hidden rounded-full">
                                     <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(56,189,248,0.6)_0%,rgba(56,189,248,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100"></span>

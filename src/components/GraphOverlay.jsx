@@ -1,25 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dropdown,
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
-  Input,
   Button,
 } from "@nextui-org/react";
 
 import { CopyToClipboard } from "react-copy-to-clipboard";
-
 import "reactflow/dist/style.css";
 import "../index.css";
 import { FaCopy } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa6";
 import { SiTicktick } from "react-icons/si";
 import { chainList } from "../utils/ChainList";
-
 import { toast } from "sonner";
-
 import { SyncLoader } from "react-spinners";
+import AutocompleteBar from "../utils/AutocompleteBar";
+
+const examples = [
+  { type: "ETH", address: "0xa336033fc39a359e375007e75af49768e98d0790" },
+  { type: "BTC v1", address: "37jKPSmbEGwgfacCr2nayn1wTaqMAbA94Z" },
+  { type: "BTC v2", address: "bc1qs4ln7kdtcwvcuaclqlv0qmf7cm446tdzjwv89c" },
+];
 
 const GraphOverlay = ({
   centralNodeAddress,
@@ -38,34 +41,40 @@ const GraphOverlay = ({
     setValidWallet(false);
   }, [searchInput]);
 
-  const checkChain = () => {
-    if (searchInput.length != 42) {
-      toast.error("Invalid Wallet Address!");
-      return;
-    }
-    setSearchChain(true);
-    setValidWallet(false);
-    if (searchInput.startsWith("0x")) {
-      setSelectedChain(new Set(["ETH"]));
-      setValidWallet(true);
-      setSearch(searchInput);
-      toast.success("Ethereum Wallet Detected!");
-    } else if (searchInput.startsWith("b")) {
-      setSelectedChain(new Set(["BTC"]));
-      setValidWallet(true);
-      setSearch(searchInput);
-      toast.success("Bitcoin Wallet Detected!");
-    } else {
-      toast.error("No Valid Wallet Found!");
-    }
-    setSearchChain(false);
-  };
+  useEffect(() => {
+    if (!validWallet) return;
+    setSearch(searchInput);
+  }, [validWallet]);
+
+  // const checkChain = () => {
+  //   console.log(searchInput);
+  //   if (searchInput.length !== 42) {
+  //     toast.error("Invalid Wallet Address!");
+  //     return;
+  //   }
+  //   setSearchChain(true);
+  //   setValidWallet(false);
+  //   if (searchInput.startsWith("0x")) {
+  //     setSelectedChain(new Set(["ETH"]));
+  //     setValidWallet(true);
+  //     setSearch(searchInput);
+  //     toast.success("Ethereum Wallet Detected!");
+  //   } else if (searchInput.startsWith("b")) {
+  //     setSelectedChain(new Set(["BTC"]));
+  //     setValidWallet(true);
+  //     setSearch(searchInput);
+  //     toast.success("Bitcoin Wallet Detected!");
+  //   } else {
+  //     toast.error("No Valid Wallet Found!");
+  //   }
+  //   setSearchChain(false);
+  // };
 
   const handleClick = () => {
     if (validWallet) {
       handleSearch();
     } else {
-      checkChain();
+      toast.error("Invalid Wallet Address!");
     }
   };
 
@@ -82,7 +91,7 @@ const GraphOverlay = ({
                   <Button variant="bordered" className="capitalize">
                     <img
                       src={
-                        chainList.filter((ele) => ele.key == selectedValue)[0]
+                        chainList.filter((ele) => ele.key === selectedValue)[0]
                           .image
                       }
                       width={20}
@@ -114,32 +123,11 @@ const GraphOverlay = ({
                 </DropdownMenu>
               </Dropdown>
             </div>
-            <Input
-              type="text"
-              color="secondary"
-              label="Address 0x12"
-              placeholder="Enter Your Sender Address:"
-              className="w-[500px] border-2 border-slate-400 rounded-md"
-              onChange={(e) => setSearchInput(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handleClick(
-                    validWallet,
-                    setValidWallet,
-                    setSearchChain,
-                    search,
-                    setSearch,
-                    setSelectedChain
-                  );
-                }
-              }}
-              endContent={
-                validWallet ? (
-                  <div className="h-full mb-1 flex items-end justify-center text-base text-secondary">
-                    <SiTicktick />
-                  </div>
-                ) : null
-              }
+            <AutocompleteBar
+              searchInput={searchInput}
+              setSearchInput={setSearchInput}
+              setValidWallet={setValidWallet}
+              setSearchChain={setSearchChain}
             />
             <Button
               color={validWallet ? "primary" : "secondary"}
@@ -147,61 +135,28 @@ const GraphOverlay = ({
               onClick={() => handleClick()}
               disabled={searchChain}
             >
-              {validWallet ? "Search!" : "Check!"}
+              {validWallet ? "Search!" : searchChain ? "Validating!" : "Check!"}
             </Button>
           </div>
           <div className="flex flex-col justify-center items-center gap-2">
-            <div className="flex justify-center items-start gap-5 text-base text-gray-500">
-              <div className="w-full text-left">
-                <span className="text-black">ETH:</span>{" "}
-                0xa336033fc39a359e375007e75af49768e98d0790
+            {examples.map((example) => (
+              <div className="flex justify-center items-start gap-5 text-base text-gray-500">
+                <div className="w-full text-left">
+                  <span className="text-black">{example.type}:</span>{" "}
+                  {example.address}
+                </div>
+                <CopyToClipboard
+                  text={example.address}
+                  onCopy={() => {
+                    toast.success("Copied to clipboard!");
+                  }}
+                >
+                  <span className="p-1 cursor-pointer border-2 border-gray-500 rounded-md">
+                    <FaCopy />
+                  </span>
+                </CopyToClipboard>
               </div>
-              <CopyToClipboard
-                text={"0xa336033fc39a359e375007e75af49768e98d0790"}
-                onCopy={() => {
-                  toast.success("Copied to clipboard!");
-                  this.setState({ copied: true });
-                }}
-              >
-                <span className="p-1 cursor-pointer border-2 border-gray-500 rounded-md">
-                  <FaCopy />
-                </span>
-              </CopyToClipboard>
-            </div>
-            <div className="flex justify-center items-start gap-5 text-base text-gray-500">
-              <div className="w-full text-left">
-                <span className="text-black">BTC v1:</span>{" "}
-                37jKPSmbEGwgfacCr2nayn1wTaqMAbA94Z
-              </div>
-              <CopyToClipboard
-                text={"37jKPSmbEGwgfacCr2nayn1wTaqMAbA94Z"}
-                onCopy={() => {
-                  toast.success("Copied to clipboard!");
-                  this.setState({ copied: true });
-                }}
-              >
-                <span className="p-1 cursor-pointer border-2 border-gray-500 rounded-md">
-                  <FaCopy />
-                </span>
-              </CopyToClipboard>
-            </div>
-            <div className="flex justify-center items-start gap-5 text-base text-gray-500">
-              <div className="w-full text-left">
-                <span className="text-black">BTC v2:</span>{" "}
-                bc1qs4ln7kdtcwvcuaclqlv0qmf7cm446tdzjwv89c
-              </div>
-              <CopyToClipboard
-                text={"bc1qs4ln7kdtcwvcuaclqlv0qmf7cm446tdzjwv89c"}
-                onCopy={() => {
-                  toast.success("Copied to clipboard!");
-                  this.setState({ copied: true });
-                }}
-              >
-                <span className="p-1 cursor-pointer border-2 border-gray-500 rounded-md">
-                  <FaCopy />
-                </span>
-              </CopyToClipboard>
-            </div>
+            ))}
           </div>
         </div>
       ) : (

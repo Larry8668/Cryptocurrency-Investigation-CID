@@ -1,15 +1,13 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-import { Input } from "@nextui-org/react";
 
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FiExternalLink } from "react-icons/fi";
 import { IoMdSearch } from "react-icons/io";
-import { SiTicktick } from "react-icons/si";
 import { LuInfo } from "react-icons/lu";
 
-import { chainList } from "../../utils/ChainList";
+import AutocompleteBar from "../../utils/AutocompleteBar";
 import { handleClick } from "../../utils/ValidateWallet";
 
 const SearchModal = ({ isModalOpen, setIsModalOpen }) => {
@@ -46,49 +44,13 @@ const SearchModal = ({ isModalOpen, setIsModalOpen }) => {
             >
               <IoCloseCircleOutline />
             </button>
-            <Input
-              type="text"
-              placeholder="Search"
-              className="w-[450px] border-2 border-slate-400 rounded-xl text-base bg-transparent"
-              onChange={(e) => setSearch(e.target.value)}
-              value={search}
-              onKeyPress={(e) => {
-                if (e.key === "Enter") {
-                  handleClick(
-                    validWallet,
-                    setValidWallet,
-                    setSearchChain,
-                    search,
-                    setSearch,
-                    setSelectedChain,
-                    handleSearch
-                  );
-                }
-              }}
-              startContent={
-                validWallet ? (
-                  <div className="h-full mb-1 flex items-end justify-center text-base text-secondary">
-                    {
-                      <div className="h-full flex flex-col items-center justify-center">
-                      <img
-                      className="border-1 border-slate-600 rounded-full"
-                        src={
-                          chainList.filter((ele) => ele.key == selectedValue)[0]
-                            .image
-                        }
-                        width={25}
-                      /></div>
-                    }
-                  </div>
-                ) : null
-              }
-              endContent={
-                validWallet ? (
-                  <div className="flex items-end justify-center text-base text-green-600">
-                    <SiTicktick />
-                  </div>
-                ) : null
-              }
+            <AutocompleteBar
+              searchInput={search}
+              setSearchInput={setSearch}
+              setValidWallet={setValidWallet}
+              setSearchChain={setSearchChain}
+              size="md"
+              customStyles="bg-transparent hover:bg-slate-200/60 rounded-xl text-black "
             />
             <button
               className={`p-2 bg-transparent border-2 border-slate-400 rounded-md ${
