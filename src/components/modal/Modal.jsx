@@ -133,7 +133,7 @@ const Modal = ({ props }) => {
                       {walletAddress}
                     </div>
                     <CopyToClipboard
-                      text={data?.id}
+                      text={walletAddress}
                       onCopy={() => {
                         toast.success("Copied to clipboard!");
                         this.setState({ copied: true });

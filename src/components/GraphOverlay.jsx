@@ -123,7 +123,14 @@ const GraphOverlay = ({
               onChange={(e) => setSearchInput(e.target.value)}
               onKeyPress={(e) => {
                 if (e.key === "Enter") {
-                  handleClick(validWallet, setValidWallet, setSearchChain, search, setSearch, setSelectedChain);
+                  handleClick(
+                    validWallet,
+                    setValidWallet,
+                    setSearchChain,
+                    search,
+                    setSearch,
+                    setSelectedChain
+                  );
                 }
               }}
               endContent={
@@ -143,19 +150,58 @@ const GraphOverlay = ({
               {validWallet ? "Search!" : "Check!"}
             </Button>
           </div>
-          <div className="flex justify-center items-center gap-5 text-base text-gray-500">
-            <div>Ex: 0xa336033fc39a359e375007e75af49768e98d0790</div>
-            <CopyToClipboard
-              text={"0xa336033fc39a359e375007e75af49768e98d0790"}
-              onCopy={() => {
-                toast.success("Copied to clipboard!");
-                this.setState({ copied: true });
-              }}
-            >
-              <span className="p-1 cursor-pointer border-2 border-black rounded-md">
-                <FaCopy />
-              </span>
-            </CopyToClipboard>
+          <div className="flex flex-col justify-center items-center gap-2">
+            <div className="flex justify-center items-start gap-5 text-base text-gray-500">
+              <div className="w-full text-left">
+                <span className="text-black">ETH:</span>{" "}
+                0xa336033fc39a359e375007e75af49768e98d0790
+              </div>
+              <CopyToClipboard
+                text={"0xa336033fc39a359e375007e75af49768e98d0790"}
+                onCopy={() => {
+                  toast.success("Copied to clipboard!");
+                  this.setState({ copied: true });
+                }}
+              >
+                <span className="p-1 cursor-pointer border-2 border-gray-500 rounded-md">
+                  <FaCopy />
+                </span>
+              </CopyToClipboard>
+            </div>
+            <div className="flex justify-center items-start gap-5 text-base text-gray-500">
+              <div className="w-full text-left">
+                <span className="text-black">BTC v1:</span>{" "}
+                37jKPSmbEGwgfacCr2nayn1wTaqMAbA94Z
+              </div>
+              <CopyToClipboard
+                text={"37jKPSmbEGwgfacCr2nayn1wTaqMAbA94Z"}
+                onCopy={() => {
+                  toast.success("Copied to clipboard!");
+                  this.setState({ copied: true });
+                }}
+              >
+                <span className="p-1 cursor-pointer border-2 border-gray-500 rounded-md">
+                  <FaCopy />
+                </span>
+              </CopyToClipboard>
+            </div>
+            <div className="flex justify-center items-start gap-5 text-base text-gray-500">
+              <div className="w-full text-left">
+                <span className="text-black">BTC v2:</span>{" "}
+                bc1qs4ln7kdtcwvcuaclqlv0qmf7cm446tdzjwv89c
+              </div>
+              <CopyToClipboard
+                text={"bc1qs4ln7kdtcwvcuaclqlv0qmf7cm446tdzjwv89c"}
+                onCopy={() => {
+                  toast.success("Copied to clipboard!");
+                  this.setState({ copied: true });
+                }}
+              >
+                <span className="p-1 cursor-pointer border-2 border-gray-500 rounded-md">
+                  <FaCopy />
+                </span>
+              </CopyToClipboard>
+            </div>
           </div>
         </div>
       ) : (

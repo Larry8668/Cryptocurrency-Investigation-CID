@@ -92,6 +92,8 @@ export function ElkPage() {
           style: {
             minWidth: 100,
             textDecoration: fromAddress === centralNodeAddress ? "underline" : "none",
+            textUnderlineOffset: fromAddress === centralNodeAddress ? "2px" : "0",
+            backgroundColor: fromAddress === centralNodeAddress ? "#fca5a5" : "white", 
           },
         };
         processedNodes.push(fromNode);
@@ -135,7 +137,7 @@ export function ElkPage() {
           targetHandle: `${toNodeID}-t`,
           label: `${valueInEth.toFixed(5)} ETH`,
           animated: true,
-          style: { stroke: edgeColor, strokeWidth: edgeWidth },
+          style: { stroke: edgeColor, strokeWidth: edgeWidth, color: 'grey' },
         };
         processedEdges.push(edge);
       }
