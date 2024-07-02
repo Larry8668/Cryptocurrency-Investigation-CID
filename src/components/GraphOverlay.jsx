@@ -14,7 +14,6 @@ import "reactflow/dist/style.css";
 import "../index.css";
 import { FaCopy } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa6";
-import { SiTicktick } from "react-icons/si";
 import { chainList } from "../utils/ChainList";
 import { toast } from "sonner";
 import { SyncLoader } from "react-spinners";
