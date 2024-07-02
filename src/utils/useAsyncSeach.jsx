@@ -1,13 +1,22 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { GlobalContext } from "../context/GlobalContext";
 import { toast } from "sonner";
 
 export function useAsyncSearch({ fetchDelay = 0, initialQuery = "" }) {
+  const {
+    handleChainChange,
+    selectedChain,
+    chain,
+    setChain,
+    detectedChain,
+    setDetectedChain,
+  } = useContext(GlobalContext);
   const [items, setItems] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState(initialQuery);
 
   const loadItems = async (query) => {
-    if (query.length < 34 || query.length > 42) return; 
+    if (query.length < 34 || query.length > 42) return;
     setIsLoading(true);
 
     try {
@@ -18,19 +27,20 @@ export function useAsyncSearch({ fetchDelay = 0, initialQuery = "" }) {
 
       let newItems = [];
       if (query.length === 34) {
-        newItems = [{ icon: "bitcoin", address: query }];
+        newItems = [{ icon: "bitcoin", address: query, key: "BTC" }];
       } else if (query.length === 42) {
         if (query.startsWith("0x")) {
-          newItems = [{ icon: "ethereum", address: query }];
+          newItems = [{ icon: "ethereum", address: query, key: "ETH" }];
         } else if (query.startsWith("b")) {
-          newItems = [{ icon: "bitcoin", address: query }];
+          newItems = [{ icon: "bitcoin", address: query, key: "BTC" }];
         } else {
           throw new Error("Invalid Wallet Address!");
         }
       } else {
         throw new Error("Invalid Wallet Address!");
       }
-
+      if(newItems.length) handleChainChange([newItems[0].key]);
+      if(newItems.length) setDetectedChain([{ address: query, key: newItems[0].key }]);
       setItems(newItems);
 
       //   // Replace the URL with your actual API endpoint
@@ -47,26 +57,28 @@ export function useAsyncSearch({ fetchDelay = 0, initialQuery = "" }) {
       //   setHasMore(json.next !== null);
       //   setItems((prevItems) => [...prevItems, ...json.results]);
     } catch (error) {
-        toast.error("There was an error with the fetch operation");
-        console.error(error);
-        setItems([]); 
-      } finally {
-        setIsLoading(false);
-      }
-    };
-  
-    useEffect(() => {
-      loadItems(query);
-    }, [query]);
-  
-    const resetSearch = (newQuery) => {
-      setQuery(newQuery);
+      toast.error("There was an error with the fetch operation");
+      console.error(error);
       setItems([]);
-    };
-  
-    return {
-      items,
-      isLoading,
-      resetSearch,
-    };
-  } 
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadItems(query);
+  }, [query]);
+
+  const resetSearch = (newQuery) => {
+    setQuery(newQuery);
+    setItems([]);
+    setDetectedChain([]);
+    handleChainChange([]);
+  };
+
+  return {
+    items,
+    isLoading,
+    resetSearch,
+  };
+}

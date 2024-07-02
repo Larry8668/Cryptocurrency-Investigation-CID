@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import {GlobalContext} from "../context/GlobalContext";
+
 import {
   Dropdown,
   DropdownTrigger,
@@ -26,49 +28,31 @@ const examples = [
 
 const GraphOverlay = ({
   centralNodeAddress,
-  selectedValue,
-  selectedChain,
-  setSelectedChain,
   setSearch,
   handleSearch,
 }) => {
+
+  const { handleChainChange, selectedChain, chain, setChain, detectedChain } = useContext(GlobalContext);
+
   const [searchInput, setSearchInput] = useState("");
   const [searchChain, setSearchChain] = useState(false);
   const [validWallet, setValidWallet] = useState(false);
-
-  useEffect(() => {
-    setSearchChain(false);
-    setValidWallet(false);
-  }, [searchInput]);
-
   useEffect(() => {
     if (!validWallet) return;
     setSearch(searchInput);
   }, [validWallet]);
 
-  // const checkChain = () => {
-  //   console.log(searchInput);
-  //   if (searchInput.length !== 42) {
-  //     toast.error("Invalid Wallet Address!");
-  //     return;
-  //   }
-  //   setSearchChain(true);
-  //   setValidWallet(false);
-  //   if (searchInput.startsWith("0x")) {
-  //     setSelectedChain(new Set(["ETH"]));
-  //     setValidWallet(true);
-  //     setSearch(searchInput);
-  //     toast.success("Ethereum Wallet Detected!");
-  //   } else if (searchInput.startsWith("b")) {
-  //     setSelectedChain(new Set(["BTC"]));
-  //     setValidWallet(true);
-  //     setSearch(searchInput);
-  //     toast.success("Bitcoin Wallet Detected!");
-  //   } else {
-  //     toast.error("No Valid Wallet Found!");
-  //   }
-  //   setSearchChain(false);
-  // };
+  useEffect(()=>{
+    if(detectedChain.length && selectedChain == detectedChain[0].key){
+      setValidWallet(true);
+      setSearchChain(false);
+      setSearchInput(detectedChain[0].address);
+      setSearch(detectedChain[0].address);
+      return;
+    }
+    setSearchChain(false);
+    setValidWallet(false);
+  },[chain])
 
   const handleClick = () => {
     if (validWallet) {
@@ -77,7 +61,7 @@ const GraphOverlay = ({
       toast.error("Invalid Wallet Address!");
     }
   };
-
+  
   return (
     <div className="absolute h-full w-full z-10 backdrop-blur-sm bg-slate-400/10 flex gap-10 justify-center items-center text-2xl">
       {!centralNodeAddress ? (
@@ -91,12 +75,12 @@ const GraphOverlay = ({
                   <Button variant="bordered" className="capitalize">
                     <img
                       src={
-                        chainList.filter((ele) => ele.key === selectedValue)[0]
-                          .image
+                        chainList.filter((ele) => ele.key === selectedChain)[0]
+                        .image
                       }
                       width={20}
-                    />
-                    {selectedValue}
+                      />
+                    {selectedChain}
                     <FaChevronDown />
                   </Button>
                 </DropdownTrigger>
@@ -105,10 +89,10 @@ const GraphOverlay = ({
                   variant="flat"
                   disallowEmptySelection
                   selectionMode="single"
-                  selectedKeys={selectedChain}
-                  onSelectionChange={setSelectedChain}
+                  selectedKeys={chain}
+                  onSelectionChange={setChain}
                   className="h-40 overflow-y-auto"
-                >
+                  >
                   {chainList.map((chain) => (
                     <DropdownItem
                       key={chain.key}
@@ -128,13 +112,13 @@ const GraphOverlay = ({
               setSearchInput={setSearchInput}
               setValidWallet={setValidWallet}
               setSearchChain={setSearchChain}
-            />
+              />
             <Button
               color={validWallet ? "primary" : "secondary"}
               variant="shadow"
               onClick={() => handleClick()}
               disabled={searchChain}
-            >
+              >
               {validWallet ? "Search!" : searchChain ? "Validating!" : "Check!"}
             </Button>
           </div>
@@ -169,3 +153,27 @@ const GraphOverlay = ({
 };
 
 export default GraphOverlay;
+
+// const checkChain = () => {
+//   console.log(searchInput);
+//   if (searchInput.length !== 42) {
+//     toast.error("Invalid Wallet Address!");
+//     return;
+//   }
+//   setSearchChain(true);
+//   setValidWallet(false);
+//   if (searchInput.startsWith("0x")) {
+//     setSelectedChain(new Set(["ETH"]));
+//     setValidWallet(true);
+//     setSearch(searchInput);
+//     toast.success("Ethereum Wallet Detected!");
+//   } else if (searchInput.startsWith("b")) {
+//     setSelectedChain(new Set(["BTC"]));
+//     setValidWallet(true);
+//     setSearch(searchInput);
+//     toast.success("Bitcoin Wallet Detected!");
+//   } else {
+//     toast.error("No Valid Wallet Found!");
+//   }
+//   setSearchChain(false);
+// };

@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Autocomplete, AutocompleteItem } from "@nextui-org/react";
 import { useAsyncSearch } from "./useAsyncSeach";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import getImageByExchange from "./ImageIconMap";
+import { GlobalContext } from "../context/GlobalContext";
 
 const AutocompleteBar = ({
   searchInput,
@@ -12,6 +13,7 @@ const AutocompleteBar = ({
   customStyles = "",
   size = "lg",
 }) => {
+  const { handleChainChange, selectedChain, chain, setChain } = useContext(GlobalContext);
   const { items, isLoading, resetSearch } = useAsyncSearch({
     fetchDelay: 1500,
     initialQuery: searchInput,

@@ -212,9 +212,6 @@ export function ElkPage() {
       {graphLoaded ? null : (
         <GraphOverlay
           centralNodeAddress={centralNodeAddress}
-          selectedValue={selectedValue}
-          selectedChain={selectedChain}
-          setSelectedChain={setSelectedChain}
           setSearch={setSearch}
           handleSearch={handleSearch}
         />
