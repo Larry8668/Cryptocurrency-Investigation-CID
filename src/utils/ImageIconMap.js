@@ -18,10 +18,11 @@ const imageMap = {
   "Coinbase: Wallet": coinbase,
   // "Lido: Staking": lido,
   "Binance 7": binance,
-  defaultImage: ethereum,
+  "ethereum": ethereum,
   "bitcoin": bitcoin,
   // "Walton (WTC)": walton,
   // "Fetch.ai: Old FET Token": fetchai,
+  defaultImage: ethereum,
 };
 
 function getImageByExchange(exchange) {
