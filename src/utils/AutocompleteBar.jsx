@@ -44,7 +44,7 @@ const AutocompleteBar = ({
       label="Enter Wallet Address"
       variant="bordered"
       disabledKeys={["loading"]}
-      className={`max-w-[500px] rounded-xl bg-[#f2eafa] hover:bg-[#e9dcf6] text-[#9251d2] ${customStyles}`}
+      className={`w-[500px] rounded-xl bg-[#f2eafa] hover:bg-[#e9dcf6] text-[#9251d2] ${customStyles}`}
       onInput={(e) => {
         setSearchInput(e.target.value);
         resetSearch(e.target.value);
