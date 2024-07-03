@@ -64,9 +64,9 @@ const GraphOverlay = ({
   return (
     <div className="absolute h-full w-full z-10 backdrop-blur-sm bg-slate-400/10 flex gap-10 justify-center items-center text-2xl">
       {!centralNodeAddress ? (
-        <div className="flex flex-col justify-center items-center gap-10 text-4xl">
+        <div className="flex flex-col justify-center items-center gap-10 text-3xl md:text-4xl w-full">
           Start Investigation 🔎
-          <div className="flex justify-center items-center gap-5">
+          <div className="w-full flex justify-center items-center flex-col md:flex-row gap-5">
             <div className="flex flex-col justify-center items-center">
               <div className="text-sm text-slate-500">Chains</div>
               <Dropdown className="border-black">
@@ -121,12 +121,13 @@ const GraphOverlay = ({
               {validWallet ? "Search!" : searchChain ? "Validating!" : "Check!"}
             </Button>
           </div>
-          <div className="flex flex-col justify-center items-center gap-2">
+          <div className="flex flex-col justify-center items-center gap-2 w-full">
             {examples.map((example) => (
               <div className="flex justify-center items-start gap-5 text-base text-gray-500">
-                <div className="w-full text-left">
-                  <span className="text-black">{example.type}:</span>{" "}
-                  {example.address}
+                <div className="w-full text-left flex flex-col md:flex-row justify-center items-center">
+                  <span className="text-black text-sm md:text-base">{example.type}:</span>{" "}
+                  <span className="text-xs md:text-base">{example.address}</span>
+                  {/* <span className="md:hidden">{truncateMiddle(example.address)}</span> */}
                 </div>
                 <CopyToClipboard
                   text={example.address}
