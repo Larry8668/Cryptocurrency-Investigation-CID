@@ -18,9 +18,14 @@ export default defineConfig({
     "import.meta.env.VITE_VERCEL_KV_REST_API_TOKEN": JSON.stringify(
       process.env.VITE_VERCEL_KV_REST_API_TOKEN
     ),
-
     "process.env.VITE_VERCEL_KV_URL": JSON.stringify(
       process.env.VITE_VERCEL_KV_URL
+    ),
+    "import.meta.env.VITE_VERCEL_UPSTASH_REDIS_REST_URL": JSON.stringify(
+      process.env.VITE_VERCEL_UPSTASH_REDIS_REST_URL
+    ),
+    "process.env.VITE_VERCEL_UPSTASH_REDIS_REST_TOKEN": JSON.stringify(
+      process.env.VITE_VERCEL_UPSTASH_REDIS_REST_TOKEN
     ),
   },
 });
