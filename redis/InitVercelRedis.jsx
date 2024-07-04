@@ -5,8 +5,8 @@ let kvClient;
 const url = import.meta.env.VITE_VERCEL_KV_REST_API_URL;
 const token = import.meta.env.VITE_VERCEL_KV_REST_API_TOKEN;
 
-console.log("Vercel KV URL:", url ? "Set" : "Not set");
-console.log("Vercel KV Token:", token ? "Set" : "Not set");
+console.log("Vercel KV URL:", url ? "Set" : "Not set", url);
+console.log("Vercel KV Token:", token ? "Set" : "Not set", token);
 
 if (!url || !token) {
   console.error("Missing Vercel KV configuration. Make sure environment variables are set correctly.");
