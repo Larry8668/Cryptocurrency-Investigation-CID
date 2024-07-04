@@ -43,5 +43,17 @@ export default {
         { values: flattenColorPalette(theme("backgroundColor")), type: "color" }
       );
     },
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.hide-scrollbar': {
+          '-ms-overflow-style': 'none',  // IE and Edge
+          'scrollbar-width': 'none',  // Firefox
+          '&::-webkit-scrollbar': {
+            display: 'none',  // Chrome, Safari, Opera
+          },
+        },
+      }
+      addUtilities(newUtilities, ['responsive']);
+    }
   ],
 };

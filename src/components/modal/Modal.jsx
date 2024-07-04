@@ -8,6 +8,7 @@ import DownloadExcelButton from "../../utils/DownloadExcel";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import { FaCopy } from "react-icons/fa6";
 import {toast} from "sonner";
+import Table from "./Table"
 
 const graphData = [
   { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
@@ -74,7 +75,6 @@ const Modal = ({ props }) => {
   useEffect(() => {
     console.log("Modal data: ", data);
   }, [data]);
-  console.log("Modal data: ", data);
   let walletAddress = data?.id.slice(0,42);
 
 
@@ -101,20 +101,23 @@ const Modal = ({ props }) => {
         sideModalOpen ? "translate-x-0" : "translate-x-full"
       } transition-transform duration-300 ease-in-out z-50`}
     >
-      <div className="p-4 h-full w-full overflow-hidden flex flex-col justify-start items-center">
+      <div className="p-2 h-full w-full overflow-hidden flex flex-col justify-start items-center">
         <div className="w-full flex justify-between items-center">
           <button
             onClick={() => setSideModalOpen(false)}
-            className="bg-[#c095e4] border-2 border-black text-xl "
+            className="bg-transparent border-2 border-black text-sm "
           >
-            <AiOutlineClose />
+            <AiOutlineClose size={16} fill="red" stroke="2px"/>
           </button>
-          <DownloadExcelButton data={data} />
+          <DownloadExcelButton  size={12} fill='blue' data={data} />
         </div>
         {data ? (
           <div className="w-full h-full flex flex-col justify-start items-center gap-10">
             <div className="w-full flex space-x-2 mt-2">
-              <span className="flex justify-center items-center p-2 bg-slate-600 rounded-full">
+            <div className="text-left">
+              <div className="flex  items-center ">
+              <span className="text-md">blockchain: {" "}</span>
+              <span className="flex justify-center items-center p-2 bg-slate-100 rounded-full">
                 <img
                   src={getImageByExchange(data?.exchange)}
                   alt={data?.exchange}
@@ -123,9 +126,9 @@ const Modal = ({ props }) => {
                   height="25"
                 />
               </span>
-              <div className="text-left">
-                <div className="flex flex-col gap-2 justify-center items-start">
-                  <div className="text-xl font-semibold mt-2">
+              </div>
+                <div className="flex items-center gap-2 justify-center">
+                  <div className="text-md font-semibold mt-2">
                     Wallet address:{" "}
                   </div>
                   <div className="w-full flex justify-between items-center gap-2 p-1 rounded-md bg-slate-400">
@@ -161,14 +164,7 @@ const Modal = ({ props }) => {
               ""
             )}
             <div className="w-full h-full border-t-2 border-b-2 border-black p-4 flex flex-col justify-start items-center gap-5 overflow-y-auto">
-              <div className="w-[80%] p-2 border-2 rounded border-t-2 border-black flex flex-col justify-start items-center gap-2">
-                <div className="w-full text-left">Transactions Frequency: </div>
-                <LineGraph props={{ graphData }} />
-              </div>
-              <div className="w-[80%] p-2 border-2 rounded border-t-2 border-black flex flex-col justify-start items-center gap-2">
-                <div className="w-full text-left">Transactions Values: </div>
-                <CircleGraph props={{ data01, data02 }} />
-              </div>
+              <Table addresswallet={walletAddress} />
             </div>
           </div>
         ) : (

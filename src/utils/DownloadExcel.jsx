@@ -25,7 +25,7 @@ const DownloadExcelButton = ({ data }) => {
           <button
             data-tooltip-id="Download CSV"
             data-tooltip-content="Download as CSV"
-            className="bg-[#c095e4] border-2 border-black text-xl text-black"
+            className="border-2 border-black text-md text-green bg-transparent"
           >
             <FaFileCsv />
           </button>
