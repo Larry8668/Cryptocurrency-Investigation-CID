@@ -5,6 +5,30 @@
 
 ---
 
+## How to run
+
+This will utilize local redis in dev mode and vercel kv in production mode, the cache used is dynamically switched.
+
+- To run the ReactJS App
+
+```shell
+npm run start 
+```
+
+- To run the NodeJS Server (that connects to local Redis)
+
+```shell
+node .\redis\node-server.cjs
+```
+
+- To run a script that dynamically determines Local or Vercel Redis as well as ReactJS App
+
+```shell
+node .\start-servers.cjs  
+```
+
+---
+
 ## Features Provided by Spectra 🎊
 
 1. Graphical Representation.

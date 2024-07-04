@@ -1,4 +1,4 @@
-import { kvClient } from './InitRedis';
+import { kvClient } from './InitVercelRedis';
 import { localRedisClient } from './InitLocalRedis';
 
 const isDevMode = import.meta.env.VITE_DEV_MODE === 'ON';

@@ -1,21 +1,24 @@
-import { createClient } from "redis";
+import axios from "axios";
 
-const localRedisClient = createClient({
-  socket: {
-    host: import.meta.env.VITE_REDIS_HOST,
-    port: import.meta.env.VITE_REDIS_PORT,
+export const localRedisClient = {
+  get: async (key) => {
+    try {
+      console.log("Local get request recieved -> ", key);
+      const response = await axios.get(`http://localhost:5000/cache/${key}`);
+      console.log("Local response ->", response.data.value)
+      return response.data.value;
+    } catch (error) {
+      console.error("Error fetching from local Redis server", error);
+      return null;
+    }
   },
-});
-
-localRedisClient.on("error", (err) => console.log("Redis Client Error", err));
-
-(async () => {
-  try {
-    await localRedisClient.connect();
-    console.log("Connected to local Redis");
-  } catch (err) {
-    console.error("Failed to connect to local Redis:", err);
-  }
-})();
-
-export { localRedisClient };
+  set: async (key, value, options) => {
+    try {
+      console.log("Local set request recieved -> ", key);
+      const ttl = options.expirationTtl || 3600; // default to 1 hour TTL
+      await axios.post("http://localhost:5000/cache", { key, value, ttl });
+    } catch (error) {
+      console.error("Error setting in local Redis server", error);
+    }
+  },
+};

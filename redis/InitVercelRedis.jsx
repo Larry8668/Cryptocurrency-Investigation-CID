@@ -5,5 +5,6 @@ const kvClient = createClient({
   token: import.meta.env.VITE_KV_REST_API_TOKEN,
 });
 
+console.log("Using Vercel KV Client...")
 
 export { kvClient };

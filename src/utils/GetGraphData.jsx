@@ -1,11 +1,8 @@
 import { toast } from "sonner";
- 
+import { cacheClient } from "../../redis/cacheProvider";
 import { processEthereumGraphData, processBitcoinGraphData } from "./ProcessGraphData";
 
-import { kvClient } from "../../redis/InitVercelRedis";
-
 const CACHE_EXPIRATION_TIME = 3600; // Cache expiration time in seconds (e.g., 1 hour)
-
 
 const getGraphData = async (walletAddress, selectedChain, thresholdValue) => {
   console.log("Selected chain ->", selectedChain[0]);
@@ -19,14 +16,26 @@ const getGraphData = async (walletAddress, selectedChain, thresholdValue) => {
   }
 }
 
+const parseCachedData = (data) => {
+  if (typeof data === 'string') {
+    try {
+      return JSON.parse(data);
+    } catch (error) {
+      console.error("Error parsing cached data:", error);
+      return null;
+    }
+  }
+  return data; 
+}
+
 const getEthereumData = async (walletAddress, thresholdValue) => {
   try {
     const cacheKey = `eth_${walletAddress}`;
-    let cachedData = await kvClient.get(cacheKey);
+    let cachedData = await cacheClient.get(cacheKey);
 
     if (cachedData) {
       console.log("Returning cached Ethereum data");
-      return cachedData;
+      return parseCachedData(cachedData);
     }
 
     console.log("Fetching Ethereum data...");
@@ -37,7 +46,8 @@ const getEthereumData = async (walletAddress, thresholdValue) => {
     const { nodes: initialNodes, edges: initialEdges } = processEthereumGraphData(data.result, thresholdValue, walletAddress);
     const result = { nodes: initialNodes, edges: initialEdges };
 
-    await kvClient.set(cacheKey, result, { expirationTtl: CACHE_EXPIRATION_TIME });
+    console.log("Setting Ethereum data in cache...")
+    await cacheClient.set(cacheKey, JSON.stringify(result), { expirationTtl: CACHE_EXPIRATION_TIME });
     return result;
   } catch (error) {
     console.error("Error fetching Ethereum data: ", error);
@@ -48,11 +58,11 @@ const getEthereumData = async (walletAddress, thresholdValue) => {
 const getBitCoinData = async (walletAddress, thresholdValue) => {
   try {
     const cacheKey = `btc_${walletAddress}`;
-    let cachedData = await kvClient.get(cacheKey);
+    let cachedData = await cacheClient.get(cacheKey);
 
     if (cachedData) {
       console.log("Returning cached Bitcoin data");
-      return cachedData;
+      return parseCachedData(cachedData);
     }
 
     console.log("Fetching Bitcoin data...");
@@ -63,7 +73,9 @@ const getBitCoinData = async (walletAddress, thresholdValue) => {
     const { nodes: initialNodes, edges: initialEdges } = processBitcoinGraphData(data.result, thresholdValue, walletAddress);
     const result = { nodes: initialNodes, edges: initialEdges };
 
-    await kvClient.set(cacheKey, result, { expirationTtl: CACHE_EXPIRATION_TIME });
+    
+    console.log("Setting Bitcoin data in cache...")
+    await cacheClient.set(cacheKey, JSON.stringify(result), { expirationTtl: CACHE_EXPIRATION_TIME });
     return result;
   } catch (error) {
     console.error("Error fetching Bitcoin data: ", error);
