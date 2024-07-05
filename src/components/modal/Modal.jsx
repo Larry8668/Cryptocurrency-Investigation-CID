@@ -116,7 +116,7 @@ const Modal = ({ props }) => {
             <div className="w-full flex space-x-2 mt-2">
             <div className="text-left">
               <div className="flex  items-center ">
-              <span className="text-md">blockchain: {" "}</span>
+              <span className="text-sm">blockchain: {" "}</span>
               <span className="flex justify-center items-center p-2 bg-slate-100 rounded-full">
                 <img
                   src={getImageByExchange(data?.exchange)}
@@ -128,7 +128,7 @@ const Modal = ({ props }) => {
               </span>
               </div>
                 <div className="flex items-center gap-2 justify-center">
-                  <div className="text-md font-semibold mt-2">
+                  <div className="text-sm font-semibold mt-2">
                     Wallet address:{" "}
                   </div>
                   <div className="w-full flex justify-between items-center gap-2 p-1 rounded-md bg-slate-400">
@@ -149,17 +149,17 @@ const Modal = ({ props }) => {
                   </div>
                 </div>
 
-                <div className="text-md font-semibold mt-2 mb-4">
+                <div className="text-sm font-semibold mt-2 mb-4">
                   Wallet balance: {(walletData?.balance / 10 ** 18).toFixed(4)}{" "}
                   ETH
                 </div>
-                <div className="text-md font-semibold mt-2 mb-4">
+                <div className="text-sm font-semibold mt-2 mb-4">
                   Wallet ERC20: {walletData?.erctokens}
                 </div>
               </div>
             </div>
             {data?.exchange ? (
-              <p className="text-md text-red-500">Exchange: {data?.exchange}</p>
+              <p className="text-sm text-red-500">Exchange: {data?.exchange}</p>
             ) : (
               ""
             )}
