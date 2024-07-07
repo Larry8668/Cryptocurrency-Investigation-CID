@@ -8,6 +8,7 @@ import {
   TableCell,
   Spinner,
   getKeyValue,
+  Button,
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 import copyClipboard from "../../utils/copyClipboard";
@@ -25,15 +26,24 @@ const columns = [
 ];
 
 const TransactionTable = ({ addresswallet }) => {
+  const [page, setPage] = React.useState(1);
+  const [isLoading, setIsLoading] = React.useState(true);
   let list = useAsyncList({
-    async load({ signal }) {
+    async load({cursor, signal }) {
+      if (cursor) {
+        setPage((prev) => prev + 1);
+      }
       let response = await fetch(
         `https://onchainanalysis.vercel.app/api/eth/0x1/${addresswallet}`,
         { signal }
       );
       let json = await response.json();
+      if (!cursor) {
+        setIsLoading(false);
+      }
       return {
         items: json.result,
+        cursor: json.next,
       };
     },
     async sort({ items, sortDescriptor }) {
@@ -48,6 +58,7 @@ const TransactionTable = ({ addresswallet }) => {
       };
     },
   });
+  const hasMore = page < 9;
 
   return (
     <Table
@@ -59,7 +70,21 @@ const TransactionTable = ({ addresswallet }) => {
       onSortChange={list.sort}
       selectedKeys={list.selectedKeys}
       onSelectionChange={list.setSelectedKeys}
-      className="text-sm"
+      bottomContent={
+        hasMore && !isLoading ? (
+          <div className="flex w-full justify-center">
+            <Button isDisabled={list.isLoading} variant="flat" onPress={list.loadMore}>
+              {list.isLoading && <Spinner color="white" size="sm" />}
+              Load More
+            </Button>
+          </div>
+        ) : null
+      }
+      classNames={{
+        base: "max-h-[520px] overflow-scroll",
+        table: "min-h-[420px]",
+        text:"text-sm"
+      }}
     >
       <TableHeader>
         {columns.map((column) => (
@@ -68,7 +93,7 @@ const TransactionTable = ({ addresswallet }) => {
           </TableColumn>
         ))}
       </TableHeader>
-      <TableBody items={list.items} loadingState={list.loadingState}>
+      <TableBody items={list.items} loadingState={list.loadingState} isLoading={isLoading} loadingContent={<Spinner label="Loading..."/>} >
         {(item) => (
           <TableRow key={item.hash}>
             {(columnKey) => (

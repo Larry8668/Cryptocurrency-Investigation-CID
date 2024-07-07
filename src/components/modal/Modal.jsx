@@ -10,6 +10,7 @@ import { FaCopy } from "react-icons/fa6";
 import {toast} from "sonner";
 import Table from "./Table"
 
+
 const graphData = [
   { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
   { name: "Page B", uv: 300, pv: 2400, amt: 2400 },
