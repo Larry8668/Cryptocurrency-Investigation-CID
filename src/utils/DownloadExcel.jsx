@@ -3,14 +3,27 @@ import { CSVLink } from "react-csv";
 import { FaFileCsv } from "react-icons/fa6";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 
+const extractAddresses = (dataArray) => {
+  return dataArray.map((data) => {
+    const { from_address, to_address, hash , block_timestamp, value, from_address_label, to_address_label, block_number  } = data;
+    return { from_address, to_address, hash , block_timestamp, value, from_address_label, to_address_label, block_number  };
+  });
+};
+
+const formatDataToCSV = (dataArray) => {
+  const headers = Object.keys(dataArray[0]);
+  const rows = dataArray.map((data) => headers.map((header) => data[header]));
+
+  return [headers, ...rows];
+};
+
 const DownloadExcelButton = ({ data }) => {
   const [csvData, setCsvData] = useState(null);
   useEffect(() => {
-    console.log("Data to Excel: ", data);
-    if (data) {
-      const headers = Object.keys(data);
-      const tempData = [headers, headers.map((header) => data[header])];
-      setCsvData(tempData);
+    if (data && data.length > 0) {
+      const addressData = extractAddresses(data);
+      const formattedData = formatDataToCSV(addressData);
+      setCsvData(formattedData);
     }
   }, [data]);
   return (

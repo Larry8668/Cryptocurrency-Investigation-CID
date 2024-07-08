@@ -78,25 +78,6 @@ export function ElkPage() {
       }
     };
     fetchData();
-    // const fetchData = async () => {
-    //   try {
-    //     setGraphLoaded(false);
-    //     const response = await fetch(`https://onchainanalysis.vercel.app/api/eth/0x1/${centralNodeAddress}`);
-    //     const data = await response.json();
-    //     console.log("API data ->", data.result);
-    //     setApiData(data.result);
-
-    //     const { nodes: initialNodes, edges: initialEdges } = processGraphData(data.result, thresholdValue, centralNodeAddress);
-    //     setNodes(initialNodes);
-    //     setEdges(initialEdges);
-    //     setGraphLoaded(true);
-    //   } catch (error) {
-    //     console.error("Error fetching data: ", error);
-    //     toast.error("Failed to fetch data");
-    //   }
-    // };
-
-    // fetchData();
   }, [centralNodeAddress]);
 
   // // Update nodes and edges when threshold changes

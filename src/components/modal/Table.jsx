@@ -31,7 +31,7 @@ const columns = [
 
 const INITIAL_VISIBLE_COLUMNS = ["hash", "from_address", "to_address", "value", "block_timestamp"];
 
-const TransactionTable = ({ addresswallet }) => {
+const TransactionTable = ({ addresswallet, setCsvData }) => {
   const [filterValue, setFilterValue] = useState("");
   const [visibleColumns, setVisibleColumns] = useState(new Set(INITIAL_VISIBLE_COLUMNS));
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -50,6 +50,7 @@ const TransactionTable = ({ addresswallet }) => {
       let json = await response.json();
       if (!cursor) {
         setIsLoading(false);
+        setCsvData(json.result);
       }
       return {
         items: json.result,

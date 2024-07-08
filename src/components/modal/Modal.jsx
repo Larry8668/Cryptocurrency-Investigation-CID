@@ -11,68 +11,10 @@ import {toast} from "sonner";
 import Table from "./Table"
 
 
-const graphData = [
-  { name: "Page A", uv: 400, pv: 2400, amt: 2400 },
-  { name: "Page B", uv: 300, pv: 2400, amt: 2400 },
-  { name: "Page C", uv: 500, pv: 2400, amt: 2400 },
-  { name: "Page D", uv: 200, pv: 2400, amt: 2400 },
-];
-const data01 = [
-  {
-    name: "Group A",
-    value: 400,
-  },
-  {
-    name: "Group B",
-    value: 300,
-  },
-  {
-    name: "Group C",
-    value: 300,
-  },
-  {
-    name: "Group D",
-    value: 200,
-  },
-  {
-    name: "Group E",
-    value: 278,
-  },
-  {
-    name: "Group F",
-    value: 189,
-  },
-];
-const data02 = [
-  {
-    name: "Group A",
-    value: 2400,
-  },
-  {
-    name: "Group B",
-    value: 4567,
-  },
-  {
-    name: "Group C",
-    value: 1398,
-  },
-  {
-    name: "Group D",
-    value: 9800,
-  },
-  {
-    name: "Group E",
-    value: 3908,
-  },
-  {
-    name: "Group F",
-    value: 4800,
-  },
-];
-
 const Modal = ({ props }) => {
   const { data, sideModalOpen, setSideModalOpen } = props;
   const [walletData, setWalletData] = useState(null);
+  const [csvData, setCsvData]=useState(null);
   useEffect(() => {
     console.log("Modal data: ", data);
   }, [data]);
@@ -110,7 +52,7 @@ const Modal = ({ props }) => {
           >
             <AiOutlineClose size={16} fill="red" stroke="2px"/>
           </button>
-          <DownloadExcelButton  size={12} fill='blue' data={data} />
+          <DownloadExcelButton  size={12} fill='blue' data={csvData} />
         </div>
         {data ? (
           <div className="w-full h-full flex flex-col justify-start items-center gap-10">
@@ -165,7 +107,7 @@ const Modal = ({ props }) => {
               ""
             )}
             <div className="w-full h-full border-t-2 border-b-2 border-black p-4 flex flex-col justify-start items-center gap-5 overflow-y-auto">
-              <Table addresswallet={walletAddress} />
+              <Table addresswallet={walletAddress} setCsvData={setCsvData} />
             </div>
           </div>
         ) : (
