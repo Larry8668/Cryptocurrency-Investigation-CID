@@ -16,9 +16,9 @@ import {
   DropdownMenu,
   DropdownItem,
   Pagination,
-  Tooltip,  
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
+import SummaryModal from "./SummaryModal";
 
 const sliceAddress = (address) => {
   return `${address.slice(0, 4)}...${address.slice(-4)}`;
@@ -32,11 +32,19 @@ const columns = [
   { name: "Time", uid: "block_timestamp", sortable: false },
 ];
 
-const INITIAL_VISIBLE_COLUMNS = ["hash", "from_address", "to_address", "value", "block_timestamp"];
+const INITIAL_VISIBLE_COLUMNS = [
+  "hash",
+  "from_address",
+  "to_address",
+  "value",
+  "block_timestamp",
+];
 
 const TransactionTable = ({ WalletAddress, setCsvData }) => {
   const [filterValue, setFilterValue] = useState("");
-  const [visibleColumns, setVisibleColumns] = useState(new Set(INITIAL_VISIBLE_COLUMNS));
+  const [visibleColumns, setVisibleColumns] = useState(
+    new Set(INITIAL_VISIBLE_COLUMNS)
+  );
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
@@ -92,17 +100,20 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
   const headerColumns = useMemo(() => {
     if (visibleColumns === "all") return columns;
 
-    return columns.filter((column) => Array.from(visibleColumns).includes(column.uid));
+    return columns.filter((column) =>
+      Array.from(visibleColumns).includes(column.uid)
+    );
   }, [visibleColumns]);
 
   const filteredItems = useMemo(() => {
     let filtered = [...list.items];
 
     if (hasSearchFilter) {
-      filtered = filtered.filter((item) =>
-        item.hash.toLowerCase().includes(filterValue.toLowerCase()) ||
-        item.from_address.toLowerCase().includes(filterValue.toLowerCase()) ||
-        item.to_address.toLowerCase().includes(filterValue.toLowerCase())
+      filtered = filtered.filter(
+        (item) =>
+          item.hash.toLowerCase().includes(filterValue.toLowerCase()) ||
+          item.from_address.toLowerCase().includes(filterValue.toLowerCase()) ||
+          item.to_address.toLowerCase().includes(filterValue.toLowerCase())
       );
     }
 
@@ -158,18 +169,15 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
   }, []);
 
   const onClear = useCallback(() => {
-    setFilterValue("")
-    setPage(1)
-  }, [])
+    setFilterValue("");
+    setPage(1);
+  }, []);
 
   const topContent = useMemo(() => {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-3 items-end">
-
-        <Tooltip content="Click here for complete info" className="border border-black text-black">
-      <Button className="bg-[#f4f4f5]">Summary</Button>
-    </Tooltip>         
+          
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
@@ -182,7 +190,7 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
           <div className="flex gap-3">
             <Dropdown>
               <DropdownTrigger className="hidden sm:flex">
-                <Button endContent={< div>⬇️</div>} variant="flat">
+                <Button endContent={<div>⬇️</div>} variant="flat">
                   Columns
                 </Button>
               </DropdownTrigger>
@@ -205,7 +213,9 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
           </div>
         </div>
         <div className="flex justify-between items-center">
-          <span className="text-default-400 text-small">Total {filteredItems.length} transactions</span>
+          <span className="text-default-400 text-small">
+            Total {filteredItems.length} transactions
+          </span>
           <label className="flex items-center text-default-400 text-small">
             Rows per page:
             <select
@@ -241,10 +251,20 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
           onChange={setPage}
         />
         <div className="hidden sm:flex w-[30%] justify-end gap-2">
-          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onPreviousPage}>
+          <Button
+            isDisabled={pages === 1}
+            size="sm"
+            variant="flat"
+            onPress={onPreviousPage}
+          >
             Previous
           </Button>
-          <Button isDisabled={pages === 1} size="sm" variant="flat" onPress={onNextPage}>
+          <Button
+            isDisabled={pages === 1}
+            size="sm"
+            variant="flat"
+            onPress={onNextPage}
+          >
             Next
           </Button>
         </div>
@@ -262,7 +282,7 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
       classNames={{
         wrapper: "max-h-[520px]",
         table: "min-h-[420px]",
-        text:"text-sm"
+        text: "text-sm",
       }}
       isStriped
       removeWrapper
@@ -282,14 +302,16 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
           </TableColumn>
         )}
       </TableHeader>
-      <TableBody 
+      <TableBody
         items={items}
-        loadingContent={<Spinner label="Loading..."/>}
+        loadingContent={<Spinner label="Loading..." />}
         loadingState={isLoading ? "loading" : "idle"}
       >
         {(item) => (
           <TableRow key={item.hash}>
-            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
+            {(columnKey) => (
+              <TableCell>{renderCell(item, columnKey)}</TableCell>
+            )}
           </TableRow>
         )}
       </TableBody>
