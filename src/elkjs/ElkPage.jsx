@@ -95,7 +95,7 @@ export function ElkPage() {
 
   const handleNodeClick = (event, node) => {
     setSelectedNode(node);
-    console.log("Selected node ->", node);
+    // console.log("Selected node ->", node);
     setSideModalOpen(true);
   };
 
@@ -106,7 +106,6 @@ export function ElkPage() {
 
   const modifiedOnNodesChange = (changes) => {
     changes.forEach((change) => {
-      console.log(change.type);
       if (change.type == "position") return;
     });
     onNodesChange(changes);
