@@ -108,12 +108,10 @@ export function ElkPage() {
     changes.forEach((change) => {
       console.log(change.type);
       if (change.type == "position") return;
-      if (change.type === "select") {
-        handleNodeClick(null, change);
-      }
     });
     onNodesChange(changes);
   };
+  console.log("Selected node ->", selectedNode);
 
   return (
     <div className="w-[100vw] h-[100vh] bg-white text-black">
@@ -126,6 +124,7 @@ export function ElkPage() {
       )}
       <ReactFlow
         nodes={nodes}
+        onNodeClick={handleNodeClick}
         onNodesChange={modifiedOnNodesChange}
         edges={edges}
         onEdgesChange={onEdgesChange}
