@@ -1,4 +1,6 @@
-import React, { useState, useMemo, useCallback } from "react";
+import { Tooltip as ReactTooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
+import { useEffect, useState, useMemo, useCallback } from "react";
 import {
   Table,
   TableHeader,
@@ -14,6 +16,7 @@ import {
   DropdownMenu,
   DropdownItem,
   Pagination,
+  Tooltip,  
 } from "@nextui-org/react";
 import { useAsyncList } from "@react-stately/data";
 
@@ -31,12 +34,14 @@ const columns = [
 
 const INITIAL_VISIBLE_COLUMNS = ["hash", "from_address", "to_address", "value", "block_timestamp"];
 
-const TransactionTable = ({ addresswallet, setCsvData }) => {
+const TransactionTable = ({ WalletAddress, setCsvData }) => {
   const [filterValue, setFilterValue] = useState("");
   const [visibleColumns, setVisibleColumns] = useState(new Set(INITIAL_VISIBLE_COLUMNS));
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+
+  const [tableKey, setTableKey] = useState(0);
 
   let list = useAsyncList({
     async load({ cursor, signal }) {
@@ -44,7 +49,7 @@ const TransactionTable = ({ addresswallet, setCsvData }) => {
         setPage((prev) => prev + 1);
       }
       let response = await fetch(
-        `https://onchainanalysis.vercel.app/api/eth/0x1/${addresswallet}`,
+        `https://onchainanalysis.vercel.app/api/eth/0x1/${WalletAddress}`,
         { signal }
       );
       let json = await response.json();
@@ -73,6 +78,14 @@ const TransactionTable = ({ addresswallet, setCsvData }) => {
       };
     },
   });
+
+  useEffect(() => {
+    setIsLoading(true);
+    list.reload();
+    setFilterValue("");
+    setPage(1);
+    setTableKey((prev) => prev + 1);
+  }, [WalletAddress]);
 
   const hasSearchFilter = Boolean(filterValue);
 
@@ -153,6 +166,10 @@ const TransactionTable = ({ addresswallet, setCsvData }) => {
     return (
       <div className="flex flex-col gap-4">
         <div className="flex justify-between gap-3 items-end">
+
+        <Tooltip content="Click here for complete info" className="border border-black text-black">
+      <Button className="bg-[#f4f4f5]">Summary</Button>
+    </Tooltip>         
           <Input
             isClearable
             className="w-full sm:max-w-[44%]"
@@ -238,6 +255,7 @@ const TransactionTable = ({ addresswallet, setCsvData }) => {
   return (
     <Table
       aria-label="Example table with custom cells, pagination and sorting"
+      key={tableKey}
       isHeaderSticky
       bottomContent={bottomContent}
       bottomContentPlacement="outside"
@@ -246,6 +264,8 @@ const TransactionTable = ({ addresswallet, setCsvData }) => {
         table: "min-h-[420px]",
         text:"text-sm"
       }}
+      isStriped
+      removeWrapper
       sortDescriptor={list.sortDescriptor}
       topContent={topContent}
       topContentPlacement="outside"
