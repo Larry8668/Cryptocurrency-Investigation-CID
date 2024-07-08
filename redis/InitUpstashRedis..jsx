@@ -1,3 +1,4 @@
+"use server";
 import { Redis } from '@upstash/redis';
 
 const url = import.meta.env.VITE_VERCEL_UPSTASH_REDIS_REST_URL;

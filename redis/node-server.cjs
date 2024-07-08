@@ -6,12 +6,12 @@ const cors = require("cors");
 require('dotenv').config()
 
 const app = express();
-const port = process.env.PORT || 5000;
+const port = 5000;
 
 const client = redis.createClient({
   socket: {
-    host: process.env.REDIS_HOST || "localhost",
-    port: process.env.REDIS_PORT || 6379,
+    host: "localhost",
+    port: 6379,
   },
 });
 
