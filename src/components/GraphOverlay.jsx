@@ -7,11 +7,6 @@ import {
   DropdownMenu,
   DropdownItem,
   Button,
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
   useDisclosure,
   Tooltip,
 } from "@nextui-org/react";
@@ -36,7 +31,7 @@ const examples = [
 ];
 
 const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
-  const { handleChainChange, selectedChain, chain, setChain, detectedChain } =
+  const { selectedChain, chain, setChain, detectedChain } =
     useContext(GlobalContext);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -74,9 +69,13 @@ const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
       {!centralNodeAddress ? (
         <div className="flex flex-col justify-center items-center gap-10 text-3xl md:text-4xl w-full">
           <Tooltip content="More Information" className="text-black">
-          <Button onClick={onOpen} className="absolute text-base top-2 left-2 rouned-xl border-1 border-slate-600 bg-white shadow-lg">
-            <FaInfo />
-          </Button></Tooltip>
+            <Button
+              onClick={onOpen}
+              className="absolute text-base top-2 left-2 rouned-xl border-1 border-slate-600 bg-white shadow-lg"
+            >
+              <FaInfo />
+            </Button>
+          </Tooltip>
           Start Investigation 🔎
           <div className="w-full flex justify-center items-center flex-col md:flex-row gap-5">
             <div className="flex flex-col justify-center items-center">
@@ -143,7 +142,6 @@ const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
                   <span className="text-xs md:text-base">
                     {example.address}
                   </span>
-                  {/* <span className="md:hidden">{truncateMiddle(example.address)}</span> */}
                 </div>
                 <CopyToClipboard
                   text={example.address}
@@ -158,7 +156,12 @@ const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
               </div>
             ))}
           </div>
-          <InfoModal size={"2xl"} backdrop={"blur"} isOpen={isOpen} onClose={onClose} />
+          <InfoModal
+            size={"2xl"}
+            backdrop={"blur"}
+            isOpen={isOpen}
+            onClose={onClose}
+          />
         </div>
       ) : (
         <div className="flex justify-center items-center gap-10">
@@ -170,27 +173,3 @@ const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
 };
 
 export default GraphOverlay;
-
-// const checkChain = () => {
-//   console.log(searchInput);
-//   if (searchInput.length !== 42) {
-//     toast.error("Invalid Wallet Address!");
-//     return;
-//   }
-//   setSearchChain(true);
-//   setValidWallet(false);
-//   if (searchInput.startsWith("0x")) {
-//     setSelectedChain(new Set(["ETH"]));
-//     setValidWallet(true);
-//     setSearch(searchInput);
-//     toast.success("Ethereum Wallet Detected!");
-//   } else if (searchInput.startsWith("b")) {
-//     setSelectedChain(new Set(["BTC"]));
-//     setValidWallet(true);
-//     setSearch(searchInput);
-//     toast.success("Bitcoin Wallet Detected!");
-//   } else {
-//     toast.error("No Valid Wallet Found!");
-//   }
-//   setSearchChain(false);
-// };

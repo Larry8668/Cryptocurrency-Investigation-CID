@@ -20,7 +20,7 @@ import { MdOutlineDoubleArrow } from "react-icons/md";
 import ElkNode from "./ElkNode";
 import useLayoutNodes from "./useLayoutNodes";
 import { GlobalContext } from "../context/GlobalContext";
-import DownloadButton from "../utils/DownloadButton";
+import DownloadOptions from "../utils/DownloadOptions";
 import Modal from "../components/modal/Modal";
 import GraphPanel from "../components/GraphPanel";
 
@@ -152,7 +152,7 @@ export function ElkPage() {
           gap={[200, 500000]}
           lineWidth={2}
         />
-        <DownloadButton />
+        <DownloadOptions centralNode={centralNodeAddress} />
       </ReactFlow>
       <Modal props={{ data: selectedNode, sideModalOpen, setSideModalOpen }} />
       <Toaster position="bottom-center" />
