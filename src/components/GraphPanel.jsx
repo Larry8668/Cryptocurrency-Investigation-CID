@@ -1,4 +1,4 @@
-import React, {useState, useContext} from "react";
+import React, { useState } from "react";
 import { IoFilterOutline } from "react-icons/io5";
 import { CiBoxList } from "react-icons/ci";
 import { FaPlus } from "react-icons/fa6";
@@ -6,33 +6,31 @@ import { CiShare2 } from "react-icons/ci";
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import { IoHomeOutline } from "react-icons/io5";
 import "react-tooltip/dist/react-tooltip.css";
-// import { Slider } from "@nextui-org/react";
-import { GlobalContext } from "../context/GlobalContext";
+import ShareModal from "./modal/ShareModal";
 import SearchModal from "./modal/SearchModal";
-
-
+import { useDisclosure } from "@nextui-org/modal";
 
 const GraphPanel = () => {
-  const { thresholdValue, setThresholdValue } = useContext(GlobalContext);
+  const { onOpen, isOpen, onClose } = useDisclosure();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const newSearch = () => {
-    setIsModalOpen((curr)=>!curr);
+    setIsModalOpen((curr) => !curr);
   };
 
-  const goHome = () =>{
+  const goHome = () => {
     window.location.href = "/elkjs";
-  }
-  
+  };
+
   const filterResult = () => {
     alert("Filter Result");
   };
-  
+
   const listResults = () => {
     alert("List Results");
   };
-  
+
   const shareResults = () => {
-    alert("Share Results");
+    onOpen();
   };
   const options = [
     { type: <FaPlus />, name: "New Search", onClick: newSearch },
@@ -68,21 +66,7 @@ const GraphPanel = () => {
           />
         </button>
       ))}
-
-      {/* <Slider
-        size="sm"
-        label="Threshold"
-        step={0.00001}
-        color="foreground"
-        maxValue={1}
-        minValue={0}
-        defaultValue={0.0001}
-        className="w-64"
-        onChange={(value) => {
-          console.log(value);
-          setThresholdValue(value);
-        }}
-      /> */}
+      <ShareModal backdrop="opaque" isOpen={isOpen} onClose={onClose} />
     </div>
   );
 };
