@@ -11,6 +11,7 @@ import {
 import MyLoader from "../skeletons/MyLoader";
 import MyHeaderSkeleton from "../skeletons/MyHeaderSkeleton";
 import { HashLoader } from "react-spinners";
+import { IoCloseSharp } from "react-icons/io5";
 
 export default function SummaryModal({
   isOpen,
@@ -30,6 +31,11 @@ export default function SummaryModal({
         onClose={onClose}
         className="text-black"
         scrollBehavior="inside"
+        closeButton={
+          <div className="text-black">
+            <IoCloseSharp size={24} />
+          </div>
+        }
       >
         <ModalContent>
           {(onClose) =>
@@ -65,11 +71,6 @@ export default function SummaryModal({
                     <MyLoader />
                   </div>
                 </ModalBody>
-                <ModalFooter className="">
-                  <Button color="danger" variant="light" onPress={onClose}>
-                    Close
-                  </Button>
-                </ModalFooter>
               </>
           }
         </ModalContent>

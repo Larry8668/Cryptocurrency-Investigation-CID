@@ -7,6 +7,7 @@ import {
   ModalBody,
   ModalFooter,
 } from "@nextui-org/react";
+import { IoCloseSharp } from "react-icons/io5";
 
 const steps = [
   {
@@ -32,6 +33,14 @@ const steps = [
   {
     id: 6,
     text: "Click the node to find more info about the wallet"
+  },
+  {
+    id:7,
+    text: "Save the graph state to localStorage by clicking the save button & load it back by clicking the load button"
+  },
+  {
+    id:8,
+    text: "You can download the graph as an image or as json by clicking the download button on the top right corner of the graph panel"
   }
 ];
 
@@ -43,6 +52,11 @@ const InfoModal = ({ size, backdrop, isOpen, onClose }) => {
       isOpen={isOpen}
       onClose={onClose}
       className="text-black"
+      closeButton={
+        <div className="text-black">
+          <IoCloseSharp size={24} />
+        </div>
+      }
     >
       <ModalContent>
         {(onClose) => (
