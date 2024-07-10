@@ -6,8 +6,10 @@ import {
   ModalBody,
   ModalFooter,
   Button,
+  Tooltip,
 } from "@nextui-org/react";
 import MyLoader from "../skeletons/MyLoader";
+import MyHeaderSkeleton from "../skeletons/MyHeaderSkeleton";
 import { HashLoader } from "react-spinners";
 
 export default function SummaryModal({
@@ -16,6 +18,7 @@ export default function SummaryModal({
   walletAddress,
   walletData=null,
 }) {
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     console.log("Modal data: ", walletData);
   }, [walletAddress]);
@@ -30,15 +33,13 @@ export default function SummaryModal({
       >
         <ModalContent>
           {(onClose) =>
-            (!walletData) ? (
-              <ModalContent className="flex justify-center items-center">
-                <HashLoader />
-              </ModalContent>
-            ) : (
               <>
-                <ModalHeader className="bg-red-400 flex flex-col gap-2">
+                <ModalHeader className={` flex ${walletData ? "flex-col" : "flex-row"} gap-2`}>
                   {walletAddress}
-                  <div className="">{JSON.stringify(walletData)}</div>
+                  <div className={`${isLoading ? "flex" : "hidden"}`}><MyHeaderSkeleton /></div>
+                  <Tooltip content="Loading..." className="text-black">
+                  <div className={`absolute top-10 right-20 ${isLoading ? "flex" : "hidden"} justify-center items-center p-2 rounded-md border-2 border-black`}>
+                  <HashLoader size={15} /></div></Tooltip>
                 </ModalHeader>
                 <ModalBody className="flex flex-col justify-around items-center">
                   <div className="">
@@ -64,16 +65,12 @@ export default function SummaryModal({
                     <MyLoader />
                   </div>
                 </ModalBody>
-                <ModalFooter className="bg-green-400">
+                <ModalFooter className="">
                   <Button color="danger" variant="light" onPress={onClose}>
                     Close
                   </Button>
-                  <Button color="primary" onPress={onClose}>
-                    Action
-                  </Button>
                 </ModalFooter>
               </>
-            )
           }
         </ModalContent>
       </Modal>
