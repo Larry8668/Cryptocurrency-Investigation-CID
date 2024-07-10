@@ -35,10 +35,11 @@ const onClickPNG = (getNodes) => {
   }).then(downloadImage);
 };
 
-function downloadAsJson(getNodes, getEdges, centralNode) {
+function downloadAsJson(getNodes, getEdges, getViewport, centralNode) {
   const data = {
     nodes: getNodes(),
     edges: getEdges(),
+    viewport: getViewport(),
   };
   const dataStr =
     "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));

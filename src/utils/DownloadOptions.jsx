@@ -17,7 +17,7 @@ import { BsFiletypeJson } from "react-icons/bs";
 import { PiFilePng } from "react-icons/pi";
 
 const DownloadOptions = ({ centralNode }) => {
-  const { getNodes, getEdges } = useReactFlow();
+  const { getNodes, getEdges, getViewport } = useReactFlow();
 
   const options = [
     {
@@ -30,7 +30,7 @@ const DownloadOptions = ({ centralNode }) => {
       label: "Download as JSON",
       note: "Recommended for large graphs",
       logo: BsFiletypeJson,
-      onClick: () => downloadAsJson(getNodes, getEdges, centralNode),
+      onClick: () => downloadAsJson(getNodes, getEdges, getViewport, centralNode),
     },
   ];
 
