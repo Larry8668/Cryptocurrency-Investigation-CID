@@ -23,6 +23,7 @@ import AutocompleteBar from "../utils/AutocompleteBar";
 import { FaInfo } from "react-icons/fa6";
 
 import InfoModal from "./modal/InfoModal";
+import { Link } from "react-router-dom";
 
 const examples = [
   { type: "ETH", address: "0xa336033fc39a359e375007e75af49768e98d0790" },
@@ -33,6 +34,8 @@ const examples = [
 const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
   const { selectedChain, chain, setChain, detectedChain } =
     useContext(GlobalContext);
+
+  const homies = [{name:"Leharaditya", link: "https://github.com/Larry8668"}, {name: "PramathS", link: "https://github.com/pramaths"}];
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -68,6 +71,15 @@ const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
     <div className="absolute h-full w-full z-10 backdrop-blur-sm bg-slate-400/10 flex gap-10 justify-center items-center text-2xl">
       {!centralNodeAddress ? (
         <div className="flex flex-col justify-center items-center gap-10 text-3xl md:text-4xl w-full">
+          <div className="absolute bottom-2 w-full flex justify-center items-center">
+            <div className="px-4 flex justify-center items-center gap-2 text-sm text-slate-400 hover:text-slate-700 hover:text-base ease-linear duration-100">
+              Made with ❣️ by :
+              <div className="flex justify-center items-center gap-2">
+              {homies.map((homie) => {
+                return <Link to={homie.link} target="_blank" className="underline text-slate-500 hover:text-black font-bold">{homie.name}</Link>;
+              })}</div>
+            </div>
+          </div>
           <Tooltip content="More Information" className="text-black">
             <Button
               onClick={onOpen}
