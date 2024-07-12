@@ -83,7 +83,7 @@ const processEthereumGraphData = (data, threshold, centralNodeAddress) => {
         sourceHandle: `${fromNodeID}-s`,
         target: toNodeID,
         targetHandle: `${toNodeID}-t`,
-        label: `${valueInEth.toFixed(5)} ETH`,
+        label: `${valueInEth.toFixed(4)} ETH`,
         animated: true,
         style: { stroke: edgeColor, strokeWidth: edgeWidth, color: "grey" },
       };
@@ -181,7 +181,7 @@ const processBitcoinGraphData = (data, threshold, centralNodeAddress) => {
         sourceHandle: `${fromNodeID}-s`,
         target: toNodeID,
         targetHandle: `${toNodeID}-t`,
-        label: `${valueInBTC.toFixed(8)} BTC`, // Bitcoin is typically represented with up to 8 decimal places
+        label: `${valueInBTC.toFixed(4)} BTC`, // Bitcoin is typically represented with up to 8 decimal places
         animated: true,
         style: { stroke: edgeColor, strokeWidth: edgeWidth, color: "grey" },
       };
