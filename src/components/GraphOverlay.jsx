@@ -35,7 +35,7 @@ const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
   const { selectedChain, chain, setChain, detectedChain } =
     useContext(GlobalContext);
 
-  const homies = [{name:"Leharaditya", link: "https://github.com/Larry8668"}, {name: "PramathS", link: "https://github.com/pramaths"}];
+  const homies = [{name:"Leharaditya", link: "https://github.com/Larry8668", sep:<>&</>}, {name: "PramathS", link: "https://github.com/pramaths", sep:<>🚀</>}];
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -74,9 +74,9 @@ const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
           <div className="absolute bottom-2 w-full flex justify-center items-center">
             <div className="px-4 flex justify-center items-center gap-2 text-sm text-slate-400 hover:text-slate-700 hover:text-base ease-linear duration-100">
               Made with ❣️ by :
-              <div className="flex justify-center items-center gap-2">
+              <div className="flex justify-center items-center gap-1">
               {homies.map((homie) => {
-                return <Link to={homie.link} target="_blank" className="underline text-slate-500 hover:text-black font-bold">{homie.name}</Link>;
+                return <><Link to={homie.link} target="_blank" className="underline text-slate-500 hover:text-black font-bold">{homie.name}</Link>{homie.sep}</>;
               })}</div>
             </div>
           </div>
