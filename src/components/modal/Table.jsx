@@ -45,7 +45,7 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
   const [visibleColumns, setVisibleColumns] = useState(
     new Set(INITIAL_VISIBLE_COLUMNS)
   );
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(15);
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
 

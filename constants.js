@@ -1,0 +1,2 @@
+const WEI_PER_ETHER = 10 ** 18;
+const SATOSHI_PER_BITCOIN = 10 ** 8;

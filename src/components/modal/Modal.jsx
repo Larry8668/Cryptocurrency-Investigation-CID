@@ -48,7 +48,7 @@ const Modal = ({ props }) => {
         sideModalOpen ? "translate-x-0" : "translate-x-full"
       } transition-transform duration-300 ease-in-out z-50`}
     >
-      <div className="p-2 h-full w-full overflow-hidden flex flex-col justify-start items-center">
+      <div className="p-2 h-full w-full overflow-hidden flex flex-col justify-start items-center text-black ">
         <div className="w-full flex justify-between items-center">
           <button
             onClick={() => setSideModalOpen(false)}
@@ -63,8 +63,8 @@ const Modal = ({ props }) => {
             <div className="w-full  flex flex-col gap-3">
               <div className="text-left flex flex-col gap-2 p-2 border-b-2 border-dashed border-slate-400">
                 <div className="flex  items-center space-x-2">
-                  <span className="text-sm">Blockchain: </span>
-                  <span className="flex justify-center items-center p-2 bg-slate-100 rounded-full">
+                  <span className="text-xs">Blockchain: </span>
+                  <span className="flex justify-center items-center">
                     <img
                       src={getImageByExchange(data?.exchange)}
                       alt={data?.exchange}
@@ -74,12 +74,12 @@ const Modal = ({ props }) => {
                     />
                   </span>
                 </div>
-                <div className="flex flex-col items-center gap-2 justify-center">
-                  <div className="text-sm font-semibold mt-2 w-full">
+                <div className="flex items-center gap-2 ">
+                  <div className="text-xs font-semibold">
                     Wallet address:{" "}
                   </div>
-                  <div className="w-auto flex justify-between items-center gap-2 p-1 rounded-md bg-slate-400">
-                    <div className="bg-white p-1 px-2 rounded-md text-xs md:text-base">
+                  <div className="w-auto flex items-center gap-2 md:text-xs p-1 rounded-md bg-slate-400">
+                    <div className="bg-white p-1 px-2 rounded-md text-xs ">
                       {walletAddress}
                     </div>
                     <CopyToClipboard
@@ -96,11 +96,11 @@ const Modal = ({ props }) => {
                   </div>
                 </div>
 
-                <div className="text-sm font-semibold">
+                <div className="text-xs font-semibold">
                   Wallet balance: {(walletData?.balance / 10 ** 18).toFixed(4)}{" "}
                   ETH
                 </div>
-                <div className="text-sm font-semibold">
+                <div className="text-xs font-semibold">
                   Wallet ERC20: {walletData?.erctokens}
                 </div>
               </div>
