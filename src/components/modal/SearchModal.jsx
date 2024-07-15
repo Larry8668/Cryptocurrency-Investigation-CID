@@ -1,36 +1,46 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useMemo, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Tooltip as ReactTooltip } from "react-tooltip";
-
 import { IoCloseCircleOutline } from "react-icons/io5";
 import { FiExternalLink } from "react-icons/fi";
 import { IoMdSearch } from "react-icons/io";
 import { LuInfo } from "react-icons/lu";
-
 import AutocompleteBar from "../../utils/AutocompleteBar";
 import { handleClick } from "../../utils/ValidateWallet";
+import ChainDropdown from "../../utils/ChainDropdown";
+import { GlobalContext } from "../../context/GlobalContext";
 
 const SearchModal = ({ isModalOpen, setIsModalOpen }) => {
+  const { selectedChain,  setChain, chain, detectedChain} =
+    useContext(GlobalContext);
+
   const [search, setSearch] = useState("");
   const [searchChain, setSearchChain] = useState(false);
   const [validWallet, setValidWallet] = useState(false);
-  const [selectedChain, setSelectedChain] = useState(new Set());
+
+  useEffect(() => {
+    if (detectedChain.length && selectedChain == detectedChain[0].key) {
+      setValidWallet(true);
+      setSearchChain(false);
+      setSearch(detectedChain[0].address);
+      return;
+    }
+    setSearchChain(false);
+    setValidWallet(false);
+  }, [chain]);
 
   useEffect(() => {
     setSearchChain(false);
     setValidWallet(false);
   }, [search]);
 
-  const selectedValue = useMemo(
-    () => Array.from(selectedChain).join(", ").replaceAll("_", " "),
-    [selectedChain]
-  );
 
   const navigate = useNavigate();
   const handleSearch = () => {
     if (search.length === 0) return;
     navigate(`/elkjs/${search}`);
   };
+
   return (
     <div className="relative">
       {isModalOpen && (
@@ -44,6 +54,7 @@ const SearchModal = ({ isModalOpen, setIsModalOpen }) => {
             >
               <IoCloseCircleOutline />
             </button>
+            <ChainDropdown selectedChain={selectedChain} setChain={setChain} />
             <AutocompleteBar
               searchInput={search}
               setSearchInput={setSearch}
@@ -63,7 +74,7 @@ const SearchModal = ({ isModalOpen, setIsModalOpen }) => {
                   setSearchChain,
                   search,
                   setSearch,
-                  setSelectedChain,
+                  setChain,
                   handleSearch
                 )
               }
@@ -132,4 +143,5 @@ const SearchModal = ({ isModalOpen, setIsModalOpen }) => {
     </div>
   );
 };
+
 export default SearchModal;

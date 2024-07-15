@@ -12,6 +12,15 @@ import Table from "./Table";
 import { Tooltip, Button, useDisclosure } from "@nextui-org/react";
 import SummaryModal from "./SummaryModal";
 
+const tabs = [
+  { id: 1,name: "Graphs" },   
+  { id: 2,name: "Transactions" },
+  { id: 3,name: "Graphs" },
+  { id: 4,name: "Graphs" },
+  { id: 5,name: "Graphs" },
+  { id: 6,name: "Graphs" },
+];
+
 const Modal = ({ props }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -19,6 +28,8 @@ const Modal = ({ props }) => {
   const [walletAddress, setWalletAddress] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const [csvData, setCsvData] = useState(null);
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  
   useEffect(() => {
     console.log("Modal data: ", data);
     if (data && data.id) {
@@ -75,9 +86,7 @@ const Modal = ({ props }) => {
                   </span>
                 </div>
                 <div className="flex items-center gap-2 ">
-                  <div className="text-xs font-semibold">
-                    Wallet address:{" "}
-                  </div>
+                  <div className="text-xs font-semibold">Wallet address: </div>
                   <div className="w-auto flex items-center gap-2 md:text-xs p-1 rounded-md bg-slate-400">
                     <div className="bg-white p-1 px-2 rounded-md text-xs ">
                       {walletAddress}
@@ -122,6 +131,22 @@ const Modal = ({ props }) => {
               ""
             )}
             <div className="w-full h-full border-t-2 border-b-2 border-dashed border-slate-400 p-4 flex flex-col justify-start items-center gap-5 overflow-y-auto">
+              <div className="w-full flex justify-start items-center gap-4 p-2 overflow-x-auto min-h-[70px] h-auto">
+                {tabs.map((tab, index) => (
+                  <button
+                    key={index}
+                    className={`px-3 rounded-lg text-sm transition duration-300 
+          ${
+            activeTab.id === tab.id
+              ? "bg-purple-500 text-white border-b-2 border-purple-700"
+              : "bg-white text-purple-500 hover:bg-purple-100"
+          }`}
+                    onClick={() => setActiveTab(tab)}
+                  >
+                    {tab.name}
+                  </button>
+                ))}
+              </div>
               {walletAddress ? (
                 <Table WalletAddress={walletAddress} setCsvData={setCsvData} />
               ) : (
@@ -133,7 +158,13 @@ const Modal = ({ props }) => {
           <LoadingDisplay />
         )}
       </div>
-      <SummaryModal isOpen={isOpen} onOpen={onOpen} onClose={onClose} walletAddress={walletAddress} walletData={walletData} />
+      <SummaryModal
+        isOpen={isOpen}
+        onOpen={onOpen}
+        onClose={onClose}
+        walletAddress={walletAddress}
+        walletData={walletData}
+      />
     </div>
   );
 };

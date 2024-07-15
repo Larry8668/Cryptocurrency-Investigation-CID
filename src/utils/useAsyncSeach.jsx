@@ -39,7 +39,6 @@ export function useAsyncSearch({ fetchDelay = 0, initialQuery = "" }) {
       } else {
         throw new Error("Invalid Wallet Address!");
       }
-      if(newItems.length) handleChainChange([newItems[0].key]);
       if(newItems.length) setDetectedChain([{ address: query, key: newItems[0].key }]);
       setItems(newItems);
 

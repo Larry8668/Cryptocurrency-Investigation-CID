@@ -4,6 +4,7 @@ import { useAsyncSearch } from "./useAsyncSeach";
 import { useInfiniteScroll } from "@nextui-org/use-infinite-scroll";
 import getImageByExchange from "./ImageIconMap";
 import { GlobalContext } from "../context/GlobalContext";
+import { toast } from "sonner";
 
 const AutocompleteBar = ({
   searchInput,
@@ -29,10 +30,11 @@ const AutocompleteBar = ({
   }, [isLoading]);
 
   useEffect(() => {
-    if (items.length === 1) {
+    if (items.length === 1 && items[0].address === selectedChain) {
       setValidWallet(true);
       setSearchChain(false);
     } else {
+      toast.error("Select correct Chain!");
       setValidWallet(false);
     }
   }, [items]);

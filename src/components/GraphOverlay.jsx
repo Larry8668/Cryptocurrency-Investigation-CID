@@ -24,6 +24,7 @@ import { FaInfo } from "react-icons/fa6";
 
 import InfoModal from "./modal/InfoModal";
 import { Link } from "react-router-dom";
+import ChainDropdown from "../utils/ChainDropdown";
 
 const examples = [
   { type: "ETH", address: "0xa336033fc39a359e375007e75af49768e98d0790" },
@@ -35,7 +36,10 @@ const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
   const { selectedChain, chain, setChain, detectedChain } =
     useContext(GlobalContext);
 
-  const homies = [{name:"Leharaditya", link: "https://github.com/Larry8668", sep:<>&</>}, {name: "PramathS", link: "https://github.com/pramaths", sep:<>🚀</>}];
+  const homies = [
+    { name: "Leharaditya", link: "https://github.com/Larry8668", sep: <>&</> },
+    { name: "PramathS", link: "https://github.com/pramaths", sep: <>🚀</> },
+  ];
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -75,9 +79,21 @@ const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
             <div className="px-4 flex justify-center items-center gap-2 text-sm text-slate-400 hover:text-slate-700 hover:text-base ease-linear duration-100">
               Made with ❣️ by :
               <div className="flex justify-center items-center gap-1">
-              {homies.map((homie) => {
-                return <><Link to={homie.link} target="_blank" className="underline text-slate-500 hover:text-black font-bold">{homie.name}</Link>{homie.sep}</>;
-              })}</div>
+                {homies.map((homie) => {
+                  return (
+                    <>
+                      <Link
+                        to={homie.link}
+                        target="_blank"
+                        className="underline text-slate-500 hover:text-black font-bold"
+                      >
+                        {homie.name}
+                      </Link>
+                      {homie.sep}
+                    </>
+                  );
+                })}
+              </div>
             </div>
           </div>
           <Tooltip content="More Information" className="text-black">
@@ -92,42 +108,10 @@ const GraphOverlay = ({ centralNodeAddress, setSearch, handleSearch }) => {
           <div className="w-full flex justify-center items-center flex-col md:flex-row gap-5">
             <div className="flex flex-col justify-center items-center">
               <div className="text-sm text-slate-500">Chains</div>
-              <Dropdown className="border-black">
-                <DropdownTrigger>
-                  <Button variant="bordered" className="capitalize">
-                    <img
-                      src={
-                        chainList.filter((ele) => ele.key === selectedChain)[0]
-                          .image
-                      }
-                      width={20}
-                    />
-                    {selectedChain}
-                    <FaChevronDown />
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  aria-label="Single selection example"
-                  variant="flat"
-                  disallowEmptySelection
-                  selectionMode="single"
-                  selectedKeys={chain}
-                  onSelectionChange={setChain}
-                  className="h-40 overflow-y-auto"
-                >
-                  {chainList.map((chain) => (
-                    <DropdownItem
-                      key={chain.key}
-                      className="text-black"
-                      startContent={
-                        <img src={chain.image} className="w-6 h-6" />
-                      }
-                    >
-                      {chain.name}
-                    </DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </Dropdown>
+              <ChainDropdown
+                selectedChain={selectedChain}
+                setChain={setChain}
+              />
             </div>
             <AutocompleteBar
               searchInput={searchInput}

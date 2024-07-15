@@ -8,7 +8,7 @@ export const GlobalProvider = ({ children }) => {
   const [thresholdValue, setThresholdValue] = useState(0.00001);
   const [detectedChain, setDetectedChain] = useState([]);
 
-  const [chain, setChain] = useState(new Set(["ETH"]));
+  const [chain, setChain] = useState(new Set(["BTC"]));
 
   const handleChainChange = (chain) =>{
     setChain(new Set(chain));
@@ -16,7 +16,7 @@ export const GlobalProvider = ({ children }) => {
 
   const selectedChain =useMemo(
     () => {
-      if(chain.size === 0) return "ETH";
+      if(chain.size === 0) return "BTC";
       return Array.from(chain).join(", ").replaceAll("_", " ")
     },
     [chain]
