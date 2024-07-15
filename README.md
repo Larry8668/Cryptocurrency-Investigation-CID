@@ -67,3 +67,20 @@ node .\start-servers.cjs
 ## Upcoming Features. 🔮
 1. API caching using Redis.
 2. LLM support for beginners.
+
+
+
+## Endpoints
+### wallet address
+``` https://onchainanalysis.vercel.app/api/${chain}/address/${address}
+```
+``` https://onchainanalysis.vercel.app/api/${chain}/txhash/${txhash}
+```
+``` https://onchainanalysis.vercel.app/api/${chain}
+```
+``` https://onchainanalysis.vercel.app/api/${chain}
+```
+``` https://onchainanalysis.vercel.app/api/${chain}
+```
+``` https://onchainanalysis.vercel.app/api/${chain}
+```
