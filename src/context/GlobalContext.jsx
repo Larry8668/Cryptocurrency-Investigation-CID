@@ -1,4 +1,4 @@
-import React, { createContext, useState, useMemo } from 'react';
+import React, { createContext, useState, useMemo } from "react";
 
 export const GlobalContext = createContext();
 
@@ -8,22 +8,38 @@ export const GlobalProvider = ({ children }) => {
   const [thresholdValue, setThresholdValue] = useState(0.00001);
   const [detectedChain, setDetectedChain] = useState([]);
 
+  const [searchType, setSearchType] = useState("Wallet");
+
   const [chain, setChain] = useState(new Set(["BTC"]));
 
-  const handleChainChange = (chain) =>{
+  const handleChainChange = (chain) => {
     setChain(new Set(chain));
-  }
+  };
 
-  const selectedChain =useMemo(
-    () => {
-      if(chain.size === 0) return "BTC";
-      return Array.from(chain).join(", ").replaceAll("_", " ")
-    },
-    [chain]
-  );
+  const selectedChain = useMemo(() => {
+    if (chain.size === 0) return "BTC";
+    return Array.from(chain).join(", ").replaceAll("_", " ");
+  }, [chain]);
 
   return (
-    <GlobalContext.Provider value={{ sideModalOpen, setSideModalOpen, selectedNode, setSelectedNode, thresholdValue, setThresholdValue, handleChainChange, selectedChain, chain, setChain, detectedChain, setDetectedChain}}>
+    <GlobalContext.Provider
+      value={{
+        sideModalOpen,
+        setSideModalOpen,
+        selectedNode,
+        setSelectedNode,
+        thresholdValue,
+        setThresholdValue,
+        handleChainChange,
+        selectedChain,
+        chain,
+        setChain,
+        detectedChain,
+        setDetectedChain,
+        searchType,
+        setSearchType,
+      }}
+    >
       {children}
     </GlobalContext.Provider>
   );

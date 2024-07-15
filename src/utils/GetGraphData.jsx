@@ -1,23 +1,36 @@
 import { toast } from "sonner";
 import { cacheClient } from "../../redis/cacheProvider";
-import { processEthereumGraphData, processBitcoinGraphData } from "./ProcessGraphData";
+import {
+  processEthereumGraphData,
+  processBitcoinGraphData,
+  processTransactionData,
+} from "./ProcessGraphData";
 
 const CACHE_EXPIRATION_TIME = 3600; // Cache expiration time in seconds (e.g., 1 hour)
 
-const getGraphData = async (walletAddress, selectedChain, thresholdValue) => {
+const getGraphData = async (
+  address,
+  selectedChain,
+  thresholdValue,
+  searchType
+) => {
   console.log("Selected chain ->", selectedChain[0]);
-  switch(selectedChain){
+  console.log("Search type ->", searchType);
+  if (searchType === "Transaction") {
+    return getTransactionDetails(address, selectedChain);
+  }
+  switch (selectedChain) {
     case "ETH":
-      return getEthereumData(walletAddress, thresholdValue);
+      return getEthereumData(address, thresholdValue);
     case "BTC":
-      return getBitCoinData(walletAddress, thresholdValue);
+      return getBitCoinData(address, thresholdValue);
     default:
       toast.error("Invalid Chain");
   }
-}
+};
 
 const parseCachedData = (data) => {
-  if (typeof data === 'string') {
+  if (typeof data === "string") {
     try {
       return JSON.parse(data);
     } catch (error) {
@@ -25,8 +38,28 @@ const parseCachedData = (data) => {
       return null;
     }
   }
-  return data; 
-}
+  return data;
+};
+
+const getTransactionDetails = async (address, selectedChain) => {
+  try {
+    const response = await fetch(
+      `https://onchainanalysis.vercel.app/api/${selectedChain}/txhash/${address}`
+    );
+    const data = await response.json();
+    console.log("API data ->", data);
+
+    const processedData = processTransactionData(data);
+    console.log("Processed Nodes ->", processedData.nodes);
+    console.log("Processed Edges ->", processedData.edges);
+
+    return processedData;
+  } catch (error) {
+    console.error("Error fetching transaction details: ", error);
+    toast.error("Failed to fetch transaction details");
+    return null;
+  }
+};
 
 const getEthereumData = async (walletAddress, thresholdValue) => {
   try {
@@ -39,21 +72,26 @@ const getEthereumData = async (walletAddress, thresholdValue) => {
     }
 
     console.log("Fetching Ethereum data...");
-    const response = await fetch(`https://onchainanalysis.vercel.app/api/eth/0x1/${walletAddress}`);
+    const response = await fetch(
+      `https://onchainanalysis.vercel.app/api/eth/0x1/${walletAddress}`
+    );
     const data = await response.json();
     console.log("API data ->", data.result);
 
-    const { nodes: initialNodes, edges: initialEdges } = processEthereumGraphData(data.result, thresholdValue, walletAddress);
+    const { nodes: initialNodes, edges: initialEdges } =
+      processEthereumGraphData(data.result, thresholdValue, walletAddress);
     const result = { nodes: initialNodes, edges: initialEdges };
 
-    console.log("Setting Ethereum data in cache...")
-    await cacheClient.set(cacheKey, JSON.stringify(result), { expirationTtl: CACHE_EXPIRATION_TIME });
+    console.log("Setting Ethereum data in cache...");
+    await cacheClient.set(cacheKey, JSON.stringify(result), {
+      expirationTtl: CACHE_EXPIRATION_TIME,
+    });
     return result;
   } catch (error) {
     console.error("Error fetching Ethereum data: ", error);
     toast.error("Failed to fetch Ethereum data");
   }
-}
+};
 
 const getBitCoinData = async (walletAddress, thresholdValue) => {
   try {
@@ -66,21 +104,25 @@ const getBitCoinData = async (walletAddress, thresholdValue) => {
     }
 
     console.log("Fetching Bitcoin data...");
-    const response = await fetch(`https://onchainanalysis.vercel.app/api/bitcoin/transactions/${walletAddress}`);
+    const response = await fetch(
+      `https://onchainanalysis.vercel.app/api/bitcoin/transactions/${walletAddress}`
+    );
     const data = await response.json();
     console.log("API data ->", data.result);
 
-    const { nodes: initialNodes, edges: initialEdges } = processBitcoinGraphData(data.result, thresholdValue, walletAddress);
+    const { nodes: initialNodes, edges: initialEdges } =
+      processBitcoinGraphData(data.result, thresholdValue, walletAddress);
     const result = { nodes: initialNodes, edges: initialEdges };
 
-    
-    console.log("Setting Bitcoin data in cache...")
-    await cacheClient.set(cacheKey, JSON.stringify(result), { expirationTtl: CACHE_EXPIRATION_TIME });
+    console.log("Setting Bitcoin data in cache...");
+    await cacheClient.set(cacheKey, JSON.stringify(result), {
+      expirationTtl: CACHE_EXPIRATION_TIME,
+    });
     return result;
   } catch (error) {
     console.error("Error fetching Bitcoin data: ", error);
     toast.error("Failed to fetch Bitcoin data");
   }
-}
+};
 
 export default getGraphData;

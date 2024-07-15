@@ -40,6 +40,7 @@ export function ElkPage() {
     setSelectedNode,
     thresholdValue,
     selectedChain,
+    searchType,
   } = useContext(GlobalContext);
 
   const [search, setSearch] = useState("");
@@ -67,7 +68,8 @@ export function ElkPage() {
         const data = await getGraphData(
           centralNodeAddress,
           selectedChain,
-          thresholdValue
+          thresholdValue,
+          searchType
         );
         setNodes(data.nodes);
         setEdges(data.edges);
