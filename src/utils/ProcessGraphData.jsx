@@ -105,7 +105,7 @@ const processBitcoinGraphData = (data, threshold, centralNodeAddress) => {
   data.forEach((item) => {
     // Convert value from satoshis to BTC
     const valueInBTC = item.value / SATOSHIS_IN_BTC;
-    if (valueInBTC < 0.01) return;
+    // if (valueInBTC < 0.01) return;
 
     const fromAddress = item.from_address;
     const toAddress = item.to_address;

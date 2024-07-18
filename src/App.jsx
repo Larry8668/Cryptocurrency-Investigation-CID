@@ -7,6 +7,7 @@ import LandingPageComponent from "./components/LandingPageComponent.jsx";
 import { ElkPage } from "./elkjs/ElkPage.jsx";
 import { ReactFlowProvider } from "reactflow";
 import { GlobalProvider } from "./context/GlobalContext";
+import GetSSEData from "./utils/GetSSEData.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: "elkjs/:centralNodeAddress",
     element: <ElkPage />,
+  },
+  {
+    path: "sse",
+    element: <GetSSEData />,
   },
 ]);
 

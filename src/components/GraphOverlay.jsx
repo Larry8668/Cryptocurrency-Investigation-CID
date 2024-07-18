@@ -29,8 +29,7 @@ import TransactionInput from "../utils/TransactionInput";
 
 const examplesWallet = [
   { type: "ETH", address: "0xa336033fc39a359e375007e75af49768e98d0790" },
-  { type: "BTC v1", address: "37jKPSmbEGwgfacCr2nayn1wTaqMAbA94Z" },
-  { type: "BTC v2", address: "bc1qs4ln7kdtcwvcuaclqlv0qmf7cm446tdzjwv89c" },
+  { type: "BTC", address: "bc1qs4ln7kdtcwvcuaclqlv0qmf7cm446tdzjwv89c" },
 ];
 
 const exampleTransactions = [

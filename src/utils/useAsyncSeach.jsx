@@ -16,7 +16,7 @@ export function useAsyncSearch({ fetchDelay = 0, initialQuery = "" }) {
   const [query, setQuery] = useState(initialQuery);
 
   const loadItems = async (query) => {
-    if (query.length < 34 || query.length > 42) return;
+    if (query.length < 34 || query.length > 64) return;
     setIsLoading(true);
 
     try {
@@ -36,10 +36,13 @@ export function useAsyncSearch({ fetchDelay = 0, initialQuery = "" }) {
         } else {
           throw new Error("Invalid Wallet Address!");
         }
+      } else if (query.length == 62) {
+        newItems = [{ icon: "bitcoin", address: query, key: "BTC" }];
       } else {
         throw new Error("Invalid Wallet Address!");
       }
-      if(newItems.length) setDetectedChain([{ address: query, key: newItems[0].key }]);
+      if (newItems.length)
+        setDetectedChain([{ address: query, key: newItems[0].key }]);
       setItems(newItems);
 
       //   // Replace the URL with your actual API endpoint

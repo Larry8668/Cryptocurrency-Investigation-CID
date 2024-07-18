@@ -26,6 +26,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "elkjs": "^0.9.3",
+    "eventsource": "^2.0.2",
     "express": "^4.19.2",
     "framer-motion": "^11.0.8",
     "html-to-image": "^1.11.11",

@@ -73,7 +73,7 @@ const getEthereumData = async (walletAddress, thresholdValue) => {
 
     console.log("Fetching Ethereum data...");
     const response = await fetch(
-      `https://onchainanalysis.vercel.app/api/eth/0x1/${walletAddress}`
+      `https://onchainanalysis.vercel.app/api/eth/address/${walletAddress}`
     );
     const data = await response.json();
     console.log("API data ->", data.result);
@@ -105,7 +105,7 @@ const getBitCoinData = async (walletAddress, thresholdValue) => {
 
     console.log("Fetching Bitcoin data...");
     const response = await fetch(
-      `https://onchainanalysis.vercel.app/api/bitcoin/transactions/${walletAddress}`
+      `https://onchainanalysis.vercel.app/api/btc/address/${walletAddress}`
     );
     const data = await response.json();
     console.log("API data ->", data.result);
