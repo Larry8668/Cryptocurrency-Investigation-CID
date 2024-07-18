@@ -24,7 +24,6 @@ import DownloadOptions from "../utils/DownloadOptions";
 import Modal from "../components/modal/Modal";
 import GraphPanel from "../components/GraphPanel";
 
-import getGraphData from "../utils/GetGraphData";
 
 const nodeTypes = {
   elk: ElkNode,
@@ -47,6 +46,7 @@ export function ElkPage() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [graphLoaded, setGraphLoaded] = useState(false);
+  const [currData, setCurrData] = useState([]);
 
   let { centralNodeAddress } = useParams();
   const navigate = useNavigate();
@@ -65,14 +65,19 @@ export function ElkPage() {
           centralNodeAddress,
           "..."
         );
-        const data = await getGraphData(
-          centralNodeAddress,
-          selectedChain,
-          thresholdValue,
-          searchType
-        );
-        setNodes(data.nodes);
-        setEdges(data.edges);
+        const url = `https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
+        const response = await fetch(url);
+        const data = await response.json();
+        console.log("Response ->", data);
+        setCurrData(data.results);
+        // const data = await getGraphData(
+        //   centralNodeAddress,
+        //   selectedChain,
+        //   thresholdValue,
+        //   searchType
+        // );
+        setNodes(data.results.graphdata.nodes);
+        setEdges(data.results.graphdata.edges);
         setGraphLoaded(true);
       } catch (error) {
         console.error("Error fetching data: ", error);
@@ -156,7 +161,7 @@ export function ElkPage() {
         />
         <DownloadOptions centralNode={centralNodeAddress} />
       </ReactFlow>
-      <Modal props={{ data: selectedNode, sideModalOpen, setSideModalOpen }} />
+      <Modal props={{ data: selectedNode, modalData: currData.transactions, sideModalOpen, setSideModalOpen }} />
       <Toaster position="bottom-center" />
     </div>
   );
