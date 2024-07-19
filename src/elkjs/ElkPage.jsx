@@ -53,6 +53,12 @@ export function ElkPage() {
 
   useLayoutNodes();
 
+
+  
+  if(!selectedChain) {
+   navigate("/elkjs");  
+  }
+
   useEffect(() => {
     const fetchData = async () => {
       if (!centralNodeAddress) return;
@@ -65,7 +71,9 @@ export function ElkPage() {
           centralNodeAddress,
           "..."
         );
-        const url = `https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
+        // const url = `https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
+        const url = `http://localhost:8000/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
+        console.log("URL ->", url);
         const response = await fetch(url);
         const data = await response.json();
         console.log("Response ->", data);
@@ -161,7 +169,7 @@ export function ElkPage() {
         />
         <DownloadOptions centralNode={centralNodeAddress} />
       </ReactFlow>
-      <Modal props={{ data: selectedNode, modalData: currData.transactions, sideModalOpen, setSideModalOpen }} />
+      <Modal props={{ data: selectedNode, sideModalOpen, setSideModalOpen }} />
       <Toaster position="bottom-center" />
     </div>
   );

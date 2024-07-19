@@ -1,6 +1,6 @@
 import { Tooltip as ReactTooltip } from "react-tooltip";
 import "react-tooltip/dist/react-tooltip.css";
-import { useEffect, useState, useMemo, useCallback } from "react";
+import { useEffect, useState, useMemo, useCallback, useContext } from "react";
 import {
   Table,
   TableHeader,
@@ -25,22 +25,22 @@ const sliceAddress = (address) => {
 };
 
 const columns = [
-  { name: "Hash", uid: "hash", sortable: false },
+  { name: "Hash", uid: "block_hash", sortable: false },
   { name: "From", uid: "from_address", sortable: false },
   { name: "To", uid: "to_address", sortable: false },
-  { name: "Value (ETH)", uid: "value", sortable: true },
+  { name: "Value", uid: "value", sortable: true },
   { name: "Time", uid: "block_timestamp", sortable: false },
 ];
 
 const INITIAL_VISIBLE_COLUMNS = [
-  "hash",
+  "block_hash",
   "from_address",
   "to_address",
   "value",
   "block_timestamp",
 ];
 
-const TransactionTable = ({ WalletAddress, setCsvData }) => {
+const TransactionTable = ({ WalletAddress, chain, setCsvData }) => {
   const [filterValue, setFilterValue] = useState("");
   const [visibleColumns, setVisibleColumns] = useState(
     new Set(INITIAL_VISIBLE_COLUMNS)
@@ -53,22 +53,32 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
 
   let list = useAsyncList({
     async load({ cursor, signal }) {
+      try {
+        
+      
       if (cursor) {
         setPage((prev) => prev + 1);
       }
       let response = await fetch(
-        `https://onchainanalysis.vercel.app/api/eth/0x1/${WalletAddress}`,
+        // `https://onchainanalysis.vercel.app/api/${chain.toLowerCase()}/address/${WalletAddress}`,
+        `http://localhost:8000/api/${chain.toLowerCase()}/address/${WalletAddress}`,
         { signal }
       );
       let json = await response.json();
       if (!cursor) {
         setIsLoading(false);
-        setCsvData(json.result);
+        setCsvData(json.results.transactions);
       }
+
       return {
-        items: json.result,
+        items: json.results.transactions,
         cursor: json.next,
       };
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+        setIsLoading(false);
+    return { items: [], cursor: null };
+    }
     },
     async sort({ items, sortDescriptor }) {
       return {
@@ -111,7 +121,7 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
     if (hasSearchFilter) {
       filtered = filtered.filter(
         (item) =>
-          item.hash.toLowerCase().includes(filterValue.toLowerCase()) ||
+          item.block_hash.toLowerCase().includes(filterValue.toLowerCase()) ||
           item.from_address.toLowerCase().includes(filterValue.toLowerCase()) ||
           item.to_address.toLowerCase().includes(filterValue.toLowerCase())
       );
@@ -134,7 +144,7 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
 
     switch (columnKey) {
       case "value":
-        return `${(parseFloat(cellValue) / 1e18).toFixed(4)} ETH`;
+        return `${(parseFloat(cellValue) / 1e18).toFixed(4)} ${chain}`;
       case "block_timestamp":
         return new Date(cellValue).toLocaleString();
       default:
@@ -307,10 +317,10 @@ const TransactionTable = ({ WalletAddress, setCsvData }) => {
         loadingContent={<Spinner label="Loading..." />}
         loadingState={isLoading ? "loading" : "idle"}
       >
-        {(item) => (
-          <TableRow key={item.hash}>
+       {(item) => (
+          <TableRow key={item.block_hash}>
             {(columnKey) => (
-              <TableCell>{renderCell(item, columnKey)}</TableCell>
+              <TableCell key={`${item.block_hash}-${columnKey}`}>{renderCell(item, columnKey)}</TableCell>
             )}
           </TableRow>
         )}

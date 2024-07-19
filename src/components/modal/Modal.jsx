@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import getImageByExchange from "../../utils/ImageIconMap";
 import LineGraph from "../charts/Line";
@@ -11,6 +11,8 @@ import { toast } from "sonner";
 import Table from "./Table";
 import { Tooltip, Button, useDisclosure } from "@nextui-org/react";
 import SummaryModal from "./SummaryModal";
+import { GlobalContext } from "../../context/GlobalContext";
+
 
 const tabs = [
   { id: 1,name: "Graphs" },   
@@ -23,7 +25,10 @@ const tabs = [
 
 const Modal = ({ props }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  const {
+    thresholdValue,
+    selectedChain,
+  } = useContext(GlobalContext);
   const { data, sideModalOpen, setSideModalOpen } = props;
   const [walletAddress, setWalletAddress] = useState(null);
   const [walletData, setWalletData] = useState(null);
@@ -148,7 +153,7 @@ const Modal = ({ props }) => {
                 ))}
               </div>
               {walletAddress ? (
-                <Table WalletAddress={walletAddress} setCsvData={setCsvData} />
+                <Table WalletAddress={walletAddress} chain={selectedChain} setCsvData={setCsvData} />
               ) : (
                 <LoadingDisplay />
               )}
