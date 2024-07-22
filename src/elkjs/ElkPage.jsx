@@ -53,47 +53,80 @@ export function ElkPage() {
 
   useLayoutNodes();
 
-
-  
   if(!selectedChain) {
    navigate("/elkjs");  
   }
 
+
   useEffect(() => {
-    const fetchData = async () => {
-      if (!centralNodeAddress) return;
-      setGraphLoaded(false);
-      try {
-        console.log(
-          "Fetching data for chain",
-          selectedChain,
-          "with address",
-          centralNodeAddress,
-          "..."
-        );
-        // const url = `https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
-        const url = `http://localhost:8000/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
-        console.log("URL ->", url);
-        const response = await fetch(url);
-        const data = await response.json();
-        console.log("Response ->", data);
-        setCurrData(data.results);
-        // const data = await getGraphData(
-        //   centralNodeAddress,
-        //   selectedChain,
-        //   thresholdValue,
-        //   searchType
-        // );
-        setNodes(data.results.graphdata.nodes);
-        setEdges(data.results.graphdata.edges);
-        setGraphLoaded(true);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-        toast.error("Failed to fetch data");
-      }
+    if (!centralNodeAddress || !selectedChain) return;
+
+    setGraphLoaded(false);
+
+    const eventSource = new EventSource(
+      `http://localhost:8000/api/${selectedChain.toLowerCase()}/stream/transactions/${centralNodeAddress}`
+    );
+
+    console.log("Event source ->", eventSource);
+
+    eventSource.onmessage = function (event) {
+      const data = JSON.parse(event.data);
+      console.log("Received data ->", data);
+      console.log("Nodes ->", data.graphdata.nodes);
+      console.log("Edges ->", data.graphdata.edges);
+
+      setNodes((prevNodes) => [...prevNodes, ...data.graphdata.nodes]);
+      setEdges((prevEdges) => [...prevEdges, ...data.graphdata.edges]);
+
+      setGraphLoaded(true);
     };
-    fetchData();
-  }, [centralNodeAddress]);
+
+    eventSource.onerror = function (error) {
+      console.error("EventSource failed:", error);
+      toast.error("Failed to fetch data via SSE");
+      eventSource.close();
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  }, [centralNodeAddress, selectedChain]);
+  
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     if (!centralNodeAddress) return;
+  //     setGraphLoaded(false);
+  //     try {
+  //       console.log(
+  //         "Fetching data for chain",
+  //         selectedChain,
+  //         "with address",
+  //         centralNodeAddress,
+  //         "..."
+  //       );
+  //       // const url = `https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
+  //       const url = `http://localhost:8000/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
+  //       console.log("URL ->", url);
+  //       const response = await fetch(url);
+  //       const data = await response.json();
+  //       console.log("Response ->", data);
+  //       setCurrData(data.results);
+  //       // const data = await getGraphData(
+  //       //   centralNodeAddress,
+  //       //   selectedChain,
+  //       //   thresholdValue,
+  //       //   searchType
+  //       // );
+  //       setNodes(data.results.graphdata.nodes);
+  //       setEdges(data.results.graphdata.edges);
+  //       setGraphLoaded(true);
+  //     } catch (error) {
+  //       console.error("Error fetching data: ", error);
+  //       toast.error("Failed to fetch data");
+  //     }
+  //   };
+  //   fetchData();
+  // }, [centralNodeAddress]);
 
   // // Update nodes and edges when threshold changes
   // useEffect(() => {
@@ -110,7 +143,6 @@ export function ElkPage() {
 
   const handleNodeClick = (event, node) => {
     setSelectedNode(node);
-    // console.log("Selected node ->", node);
     setSideModalOpen(true);
   };
 
