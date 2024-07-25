@@ -38,7 +38,7 @@ const Modal = ({ props }) => {
   useEffect(() => {
     console.log("Modal data: ", data);
     if (data && data.id) {
-      setWalletAddress(data.id.slice(0, 42));
+      setWalletAddress(data.id);
     }
   }, [data]);
 

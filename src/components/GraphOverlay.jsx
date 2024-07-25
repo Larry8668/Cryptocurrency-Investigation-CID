@@ -183,7 +183,7 @@ const GraphOverlay = ({
               <TransactionInput />
             </div>
           )}
-          <div className="border-2 border-[#b46efa] bg-[#e9dcf6] border-dashed rounded-xl p-10 flex flex-col justify-center items-center gap-10">
+          <div className="border-2 border-[#b46efa] bg-[#f2eafa] border-dashed rounded-xl p-10 py-5 flex flex-col justify-center items-center gap-10">
           <div className="flex w-full justify-center items-center gap-5">
             <div className="text-base">Select search type :</div>
             <RadioGroup
