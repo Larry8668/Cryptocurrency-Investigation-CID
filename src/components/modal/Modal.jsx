@@ -10,6 +10,8 @@ import Table from "./Table";
 import DownloadExcelButton from "../../utils/DownloadExcel";
 import LoadingDisplay from "../../utils/LoadingDisplay";
 import { motion } from "framer-motion";
+import { RiTimeLine } from "react-icons/ri";
+import { BsCalendarCheck, BsArrowDownCircle, BsArrowUpCircle } from "react-icons/bs";
 
 const tabs = [
   { id: 1, name: "Overview", icon: <IoWalletOutline /> },
@@ -147,33 +149,49 @@ const Modal = ({ props }) => {
             <div className="w-full h-full border-t-2 border-purple-100 p-4 flex flex-col justify-start items-center gap-5 overflow-y-auto">
               {activeTab.id === 1 && (
                 <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.1 }}
-                  className="w-full space-y-6"
-                >
-                  <div className="grid grid-cols-2 gap-6 text-sm">
-                    <div className="bg-purple-50 p-4 rounded-lg">
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.1 }}
+                className="w-full space-y-6"
+              >
+                <div className="grid grid-cols-2 gap-6 text-sm">
+                  <div className="bg-purple-50 p-4 rounded-lg flex items-start">
+                    <RiTimeLine className="text-purple-600 text-2xl mr-3 mt-1" />
+                    <div>
                       <p className="text-purple-600 mb-1">First Transaction:</p>
                       <p className="font-semibold text-lg">{formatDate(walletData.firstTransactionTime)}</p>
                     </div>
-                    <div className="bg-purple-50 p-4 rounded-lg">
+                  </div>
+                  <div className="bg-purple-50 p-4 rounded-lg flex items-start">
+                    <BsCalendarCheck className="text-purple-600 text-2xl mr-3 mt-1" />
+                    <div>
                       <p className="text-purple-600 mb-1">Last Transaction:</p>
                       <p className="font-semibold text-lg">{formatDate(walletData.lastTransactionTime)}</p>
                     </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-6 text-sm">
-                    <div className="bg-green-50 p-4 rounded-lg">
+                </div>
+                <div className="grid grid-cols-2 gap-6 text-sm">
+                  <div className="bg-green-50 p-4 rounded-lg flex items-start">
+                    <BsArrowDownCircle className="text-green-600 text-2xl mr-3 mt-1" />
+                    <div>
                       <p className="text-green-600 mb-1">Total Received:</p>
-                      <p className="font-semibold text-lg text-green-600">{parseFloat(walletData.totalReceived).toFixed(2)} {walletData.balanceSymbol}</p>
-                    </div>
-                    <div className="bg-red-50 p-4 rounded-lg">
-                      <p className="text-red-600 mb-1">Total Sent:</p>
-                      <p className="font-semibold text-lg text-red-600">{parseFloat(walletData.totalSent).toFixed(2)} {walletData.balanceSymbol}</p>
+                      <p className="font-semibold text-lg text-green-600">
+                        {parseFloat(walletData.totalReceived).toFixed(2)} {walletData.balanceSymbol}
+                      </p>
                     </div>
                   </div>
-                </motion.div>
-              )}
+                  <div className="bg-red-50 p-4 rounded-lg flex items-start">
+                    <BsArrowUpCircle className="text-red-600 text-2xl mr-3 mt-1" />
+                    <div>
+                      <p className="text-red-600 mb-1">Total Sent:</p>
+                      <p className="font-semibold text-lg text-red-600">
+                        {parseFloat(walletData.totalSent).toFixed(2)} {walletData.balanceSymbol}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
               {activeTab.id === 2 && (
                 <Table WalletAddress={walletAddress} chain={selectedChain} setCsvData={setCsvData} />
               )}
