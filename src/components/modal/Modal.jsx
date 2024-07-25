@@ -1,42 +1,31 @@
 import React, { useEffect, useState, useContext } from "react";
 import { AiOutlineClose } from "react-icons/ai";
-import getImageByExchange from "../../utils/ImageIconMap";
-import LineGraph from "../charts/Line";
-import CircleGraph from "../charts/Circle";
-import LoadingDisplay from "../../utils/LoadingDisplay";
-import DownloadExcelButton from "../../utils/DownloadExcel";
+import { FaCopy, FaEthereum } from "react-icons/fa";
+import { IoWalletOutline } from "react-icons/io5";
+import { BiTransfer } from "react-icons/bi";
 import { CopyToClipboard } from "react-copy-to-clipboard";
-import { FaCopy } from "react-icons/fa6";
 import { toast } from "sonner";
-import Table from "./Table";
-import { Tooltip, Button, useDisclosure } from "@nextui-org/react";
-import SummaryModal from "./SummaryModal";
 import { GlobalContext } from "../../context/GlobalContext";
-
+import Table from "./Table";
+import DownloadExcelButton from "../../utils/DownloadExcel";
+import LoadingDisplay from "../../utils/LoadingDisplay";
+import { motion } from "framer-motion";
 
 const tabs = [
-  { id: 1,name: "Graphs" },   
-  { id: 2,name: "Transactions" },
-  { id: 3,name: "Graphs" },
-  { id: 4,name: "Graphs" },
-  { id: 5,name: "Graphs" },
-  { id: 6,name: "Graphs" },
+  { id: 1, name: "Overview", icon: <IoWalletOutline /> },
+  { id: 2, name: "Transactions", icon: <BiTransfer /> },
+  { id: 3, name: "Graphs", icon: <FaEthereum /> },
 ];
 
 const Modal = ({ props }) => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    thresholdValue,
-    selectedChain,
-  } = useContext(GlobalContext);
+  const { selectedChain } = useContext(GlobalContext);
   const { data, sideModalOpen, setSideModalOpen } = props;
   const [walletAddress, setWalletAddress] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const [csvData, setCsvData] = useState(null);
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  
+
   useEffect(() => {
-    console.log("Modal data: ", data);
     if (data && data.id) {
       setWalletAddress(data.id);
     }
@@ -44,119 +33,169 @@ const Modal = ({ props }) => {
 
   const walletDetails = async () => {
     if (data?.id) {
-      const response = await fetch(
-        // `https://onchainanalysis.vercel.app/api/crypto/${walletAddress}`
-        `http://localhost:8000/api/crypto/${walletAddress}/${selectedChain}`
-      );
-      const details = await response.json();
-
-      setWalletData(details);
-      console.log(details);
+      try {
+        const response = await fetch(
+          `http://localhost:8000/api/crypto/${walletAddress}/${selectedChain}`
+        );
+        const details = await response.json();
+        setWalletData(details);
+      } catch (error) {
+        console.error("Error fetching wallet details:", error);
+        toast.error("Failed to fetch wallet details");
+      }
     }
   };
+
   useEffect(() => {
     walletDetails();
-  }, [data]);
-  console.log("Wallet data: ", walletAddress);
+  }, [data, selectedChain]);
+
+  const formatBalance = (balance) => {
+    return parseFloat(balance).toFixed(6);
+  };
+
+  const formatDate = (timestamp) => {
+    return new Date(parseInt(timestamp)).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
+  };
 
   return (
-    <div
-      className={`fixed top-0 right-0 bottom-0 h-[98%] w-[100%] md:min-w-[520px] pr-2 md:w-[40vw] bg-white shadow-lg transform rounded-lg md:rounded-r-none my-2 border-2 md:border-r-0 border-black ${
-        sideModalOpen ? "translate-x-0" : "translate-x-full"
-      } transition-transform duration-300 ease-in-out z-50`}
+    <motion.div
+      initial={{ x: "100%" }}
+      animate={{ x: sideModalOpen ? 0 : "100%" }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      className="fixed top-0 right-0 bottom-0 h-full w-full md:w-[40vw] bg-white shadow-lg rounded-l-2xl border-l-4 border-purple-500 overflow-hidden z-50"
     >
-      <div className="p-2 h-full w-full overflow-hidden flex flex-col justify-start items-center text-black ">
-        <div className="w-full flex justify-between items-center">
-          <button
+      <div className="p-6 h-full w-full overflow-hidden flex flex-col justify-start items-center text-black">
+        <div className="w-full flex justify-between items-center mb-6">
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             onClick={() => setSideModalOpen(false)}
-            className="bg-transparent border-2 border-black text-sm "
+            className="bg-purple-100 text-purple-600 rounded-full p-2 hover:bg-purple-200 transition-colors"
           >
-            <AiOutlineClose size={16} fill="red" stroke="2px" />
-          </button>
-          <DownloadExcelButton size={12} fill="blue" data={csvData} />
+            <AiOutlineClose size={20} />
+          </motion.button>
+          <h1 className="text-2xl font-bold text-purple-600">Wallet Dashboard</h1>
+          <DownloadExcelButton size={20} fill="purple" data={csvData} />
         </div>
-        {data ? (
-          <div className="w-full h-full flex flex-col justify-start items-center gap-3">
-            <div className="w-full  flex flex-col gap-3">
-              <div className="text-left flex flex-col gap-2 p-2 border-b-2 border-dashed border-slate-400">
-                <div className="flex  items-center space-x-2">
-                  <span className="text-xs">Blockchain: </span>
-                  <span className="flex justify-center items-center">
-                    <img
-                      src={getImageByExchange(data?.exchange)}
-                      alt={data?.exchange}
-                      className="rounded-full"
-                      width="25"
-                      height="25"
-                    />
-                  </span>
-                </div>
-                <div className="flex items-center gap-2 ">
-                  <div className="text-xs font-semibold">Wallet address: </div>
-                  <div className="w-auto flex items-center gap-2 md:text-xs p-1 rounded-md bg-slate-400">
-                    <div className="bg-white p-1 px-2 rounded-md text-xs ">
-                      {walletAddress}
-                    </div>
-                    <CopyToClipboard
-                      text={walletAddress}
-                      onCopy={() => {
-                        toast.success("Copied to clipboard!");
-                        this.setState({ copied: true });
-                      }}
-                    >
-                      <span className="p-1 cursor-pointer border-2 border-black rounded-md">
-                        <FaCopy />
-                      </span>
-                    </CopyToClipboard>
-                  </div>
-                </div>
 
-                <div className="text-xs font-semibold">
-                  Wallet balance: {(walletData?.balance / 10 ** 18).toFixed(4)}{" "}
-                  ETH
-                </div>
-                <div className="text-xs font-semibold">
-                  Wallet ERC20: {walletData?.erctokens}
-                </div>
-              </div>
-              <Tooltip
-                content="Click here for complete info"
-                className="border border-black text-black mx-0"
-              >
-                <Button
-                  className="bg-[#f4f4f5] w-full border-black mx-0"
-                  onClick={() => onOpen()}
+        {walletData ? (
+          <div className="w-full h-full flex flex-col justify-start items-center gap-6 overflow-y-auto">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 p-6 rounded-2xl text-white shadow-lg"
+            >
+              <h2 className="text-2xl font-bold mb-4">Wallet Overview</h2>
+              <p className="text-lg mb-3">{selectedChain.toUpperCase()} Chain</p>
+              <div className="flex items-center space-x-2 mb-4">
+                <span className="text-sm">Address: </span>
+                <span className="bg-white text-purple-600 text-sm p-2 rounded-lg font-mono">
+                  {walletAddress}
+                </span>
+                <CopyToClipboard
+                  text={walletAddress}
+                  onCopy={() => toast.success("Address copied to clipboard!")}
                 >
-                  Generate Summary
-                </Button>
-              </Tooltip>
-            </div>
-            {data?.exchange ? (
-              <p className="text-sm text-red-500">Exchange: {data?.exchange}</p>
-            ) : (
-              ""
-            )}
-            <div className="w-full h-full border-t-2 border-b-2 border-dashed border-slate-400 p-4 flex flex-col justify-start items-center gap-5 overflow-y-auto">
-              <div className="w-full flex justify-start items-center gap-4 p-2 overflow-x-auto min-h-[70px] h-auto">
-                {tabs.map((tab, index) => (
-                  <button
-                    key={index}
-                    className={`px-3 rounded-lg text-sm transition duration-300 
-          ${
-            activeTab.id === tab.id
-              ? "bg-purple-500 text-white border-b-2 border-purple-700"
-              : "bg-white text-purple-500 hover:bg-purple-100"
-          }`}
-                    onClick={() => setActiveTab(tab)}
+                  <motion.span 
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                    className="p-2 cursor-pointer bg-purple-200 text-purple-600 rounded-full"
                   >
-                    {tab.name}
-                  </button>
-                ))}
+                    <FaCopy size={14} />
+                  </motion.span>
+                </CopyToClipboard>
               </div>
-              {walletAddress ? (
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div className="bg-white bg-opacity-20 p-3 rounded-lg">
+                  <p className="text-purple-200">Balance:</p>
+                  <p className="font-semibold text-lg">{formatBalance(walletData.balance)} {walletData.balanceSymbol}</p>
+                </div>
+                <div className="bg-white bg-opacity-20 p-3 rounded-lg">
+                  <p className="text-purple-200">Transactions:</p>
+                  <p className="font-semibold text-lg">{walletData.transactionCount}</p>
+                </div>
+              </div>
+            </motion.div>
+            
+            <div className="w-full flex justify-start items-center gap-4 p-2 overflow-x-auto">
+              {tabs.map((tab) => (
+                <motion.button
+                  key={tab.id}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className={`px-4 py-2 rounded-lg text-sm transition duration-300 flex items-center gap-2
+                    ${
+                      activeTab.id === tab.id
+                        ? "bg-purple-500 text-white"
+                        : "bg-white text-purple-500 hover:bg-purple-100"
+                    }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab.icon}
+                  {tab.name}
+                </motion.button>
+              ))}
+            </div>
+            
+            <div className="w-full h-full border-t-2 border-purple-100 p-4 flex flex-col justify-start items-center gap-5 overflow-y-auto">
+              {activeTab.id === 1 && (
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                  className="w-full space-y-6"
+                >
+                  <div className="grid grid-cols-2 gap-6 text-sm">
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <p className="text-purple-600 mb-1">First Transaction:</p>
+                      <p className="font-semibold text-lg">{formatDate(walletData.firstTransactionTime)}</p>
+                    </div>
+                    <div className="bg-purple-50 p-4 rounded-lg">
+                      <p className="text-purple-600 mb-1">Last Transaction:</p>
+                      <p className="font-semibold text-lg">{formatDate(walletData.lastTransactionTime)}</p>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-6 text-sm">
+                    <div className="bg-green-50 p-4 rounded-lg">
+                      <p className="text-green-600 mb-1">Total Received:</p>
+                      <p className="font-semibold text-lg text-green-600">{parseFloat(walletData.totalReceived).toFixed(2)} {walletData.balanceSymbol}</p>
+                    </div>
+                    <div className="bg-red-50 p-4 rounded-lg">
+                      <p className="text-red-600 mb-1">Total Sent:</p>
+                      <p className="font-semibold text-lg text-red-600">{parseFloat(walletData.totalSent).toFixed(2)} {walletData.balanceSymbol}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              )}
+              {activeTab.id === 2 && (
                 <Table WalletAddress={walletAddress} chain={selectedChain} setCsvData={setCsvData} />
-              ) : (
-                <LoadingDisplay />
+              )}
+              {activeTab.id === 3 && (
+                <div className="w-full text-center">
+                  <p className="text-purple-500 text-lg">Exciting graphs coming soon!</p>
+                  <motion.div
+                    animate={{
+                      scale: [1, 1.1, 1],
+                      rotate: [0, 10, -10, 0],
+                    }}
+                    transition={{
+                      duration: 2,
+                      ease: "easeInOut",
+                      times: [0, 0.2, 0.5, 0.8, 1],
+                      repeat: Infinity,
+                      repeatDelay: 1
+                    }}
+                    className="text-6xl mt-4 text-purple-400"
+                  >
+                    📊
+                  </motion.div>
+                </div>
               )}
             </div>
           </div>
@@ -164,14 +203,7 @@ const Modal = ({ props }) => {
           <LoadingDisplay />
         )}
       </div>
-      <SummaryModal
-        isOpen={isOpen}
-        onOpen={onOpen}
-        onClose={onClose}
-        walletAddress={walletAddress}
-        walletData={walletData}
-      />
-    </div>
+    </motion.div>
   );
 };
 
