@@ -1,4 +1,5 @@
 import ReactDOM from "react-dom/client";
+import { Auth0Provider } from "@auth0/auth0-react";
 import ErrorPage from "./error-page";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
@@ -29,11 +30,19 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <GlobalProvider>
-    <NextUIProvider>
-      <ReactFlowProvider>
-        <RouterProvider router={router} />
-      </ReactFlowProvider>
-    </NextUIProvider>
-  </GlobalProvider>
+  <Auth0Provider
+    domain={import.meta.env.VITE_VERCEL_AUTH0_DOMAIN}
+    clientId={import.meta.env.VITE_VERCEL_AUTH0_CLIENT_ID}
+    authorizationParams={{
+      redirect_uri: window.location.origin,
+    }}
+  >
+    <GlobalProvider>
+      <NextUIProvider>
+        <ReactFlowProvider>
+          <RouterProvider router={router} />
+        </ReactFlowProvider>
+      </NextUIProvider>
+    </GlobalProvider>
+  </Auth0Provider>
 );

@@ -46,6 +46,8 @@ export function ElkPage() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [graphLoaded, setGraphLoaded] = useState(false);
+  const [walletSearchType, setWalletSearchType] = useState("standard");
+  const [walletSearchDepth, setWalletSearchDepth] = useState("2");
   const [currData, setCurrData] = useState([]);
 
   let { centralNodeAddress } = useParams();
@@ -166,6 +168,10 @@ export function ElkPage() {
           centralNodeAddress={centralNodeAddress}
           setSearch={setSearch}
           handleSearch={handleSearch}
+          walletSearchType={walletSearchType}
+          setWalletSearchType={setWalletSearchType}
+          walletSearchDepth ={walletSearchDepth}
+          setWalletSearchDepth = {setWalletSearchDepth}
         />
       )}
       <ReactFlow

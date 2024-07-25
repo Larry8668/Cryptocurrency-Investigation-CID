@@ -27,5 +27,11 @@ export default defineConfig({
     "process.env.VITE_VERCEL_UPSTASH_REDIS_REST_TOKEN": JSON.stringify(
       process.env.VITE_VERCEL_UPSTASH_REDIS_REST_TOKEN
     ),
+    "process.env.VITE_VERCEL_AUTH0_CLIENT_ID": JSON.stringify(
+      process.env.VITE_VERCEL_AUTH0_CLIENT_ID
+    ),
+    "process.env.VITE_VERCEL_AUTH0_DOMAIN": JSON.stringify(
+      process.env.VITE_VERCEL_AUTH0_DOMAIN
+    ),
   },
 });
