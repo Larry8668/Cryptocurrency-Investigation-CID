@@ -38,7 +38,8 @@ const Modal = ({ props }) => {
           `http://localhost:8000/api/crypto/${walletAddress}/${selectedChain}`
         );
         const details = await response.json();
-        setWalletData(details);
+        console.log(details)
+        setWalletData(details[0]);
       } catch (error) {
         console.error("Error fetching wallet details:", error);
         toast.error("Failed to fetch wallet details");
