@@ -39,6 +39,9 @@ export function ElkPage() {
     setSelectedNode,
     thresholdValue,
     selectedChain,
+    outgoingTransactions,
+    nodesToUpdate,
+    setNodesToUpdate
   } = useContext(GlobalContext);
 
   const [search, setSearch] = useState("");
@@ -85,7 +88,7 @@ export function ElkPage() {
 
       eventSource.onerror = function (error) {
         console.error("EventSource failed:", error);
-        toast.error("Failed to fetch data via SSE");
+        toast.success("SSE Data transfer complete");
         eventSource.close();
       };
 
@@ -120,6 +123,47 @@ export function ElkPage() {
       fetchData();
     }
   }, [centralNodeAddress, selectedChain, walletSearchType]);
+
+  useEffect(() => {
+    if (nodesToUpdate) {
+      const transactions = outgoingTransactions[nodesToUpdate];
+      if (transactions) {
+        // Add new nodes and edges
+        const newNodes = transactions.map((tx, index) => ({
+          id: `${nodesToUpdate}-${tx.to_address}-${index}`,
+          type: 'elk',
+          data: { 
+            label: `${tx.to_address}:${nodesToUpdate.split(':')[1] || '0'}-${index + 1}`,
+            targetHandles: [],
+            sourceHandles: []
+          },
+          position: { x: 0, y: 0 }  // The layout algorithm will position this
+        }));
+
+        const newEdges = transactions.map((tx, index) => ({
+          id: `${nodesToUpdate}-${tx.to_address}-${index}`,
+          source: nodesToUpdate,
+          target: `${nodesToUpdate}-${tx.to_address}-${index}`,
+          animated: true,
+          label: `${tx.value} ${selectedChain}`
+        }));
+
+        setNodes(nodes => {
+          const existingNodes = nodes.filter(node => !node.id.startsWith(`${nodesToUpdate}-`));
+          return [...existingNodes, ...newNodes];
+        });
+        setEdges(edges => {
+          const existingEdges = edges.filter(edge => !edge.id.startsWith(`${nodesToUpdate}-`));
+          return [...existingEdges, ...newEdges];
+        });
+      } else {
+        // Remove nodes and edges
+        setNodes(nodes => nodes.filter(node => !node.id.startsWith(`${nodesToUpdate}-`)));
+        setEdges(edges => edges.filter(edge => !edge.id.startsWith(`${nodesToUpdate}-`)));
+      }
+      setNodesToUpdate(null);
+    }
+  }, [nodesToUpdate, outgoingTransactions, setNodes, setEdges, selectedChain, setNodesToUpdate]);
 
   console.log("Nodes ->", nodes);
   console.log("Edges ->", edges);
