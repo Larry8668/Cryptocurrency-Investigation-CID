@@ -9,6 +9,7 @@ import { ElkPage } from "./elkjs/ElkPage.jsx";
 import { ReactFlowProvider } from "reactflow";
 import { GlobalProvider } from "./context/GlobalContext";
 import GetSSEData from "./utils/GetSSEData.jsx";
+import UploadFile from "./elkjs/UploadFile.jsx";
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,9 +24,13 @@ const router = createBrowserRouter([
     path: "elkjs/:centralNodeAddress",
     element: <ElkPage />,
   },
+  // {
+  //   path: "sse",
+  //   element: <GetSSEData />,
+  // },
   {
-    path: "sse",
-    element: <GetSSEData />,
+    path: "/upload-graph",
+    element: <UploadFile />,
   },
 ]);
 
