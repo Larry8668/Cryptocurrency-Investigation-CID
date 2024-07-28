@@ -19,7 +19,8 @@ const SearchModal = ({ isModalOpen, setIsModalOpen }) => {
   const [validWallet, setValidWallet] = useState(false);
 
   useEffect(() => {
-    if (detectedChain.length && selectedChain == detectedChain[0].key) {
+    // if (detectedChain.length && selectedChain == detectedChain[0].key) {
+    if (detectedChain.length) {
       setValidWallet(true);
       setSearchChain(false);
       setSearch(detectedChain[0].address);

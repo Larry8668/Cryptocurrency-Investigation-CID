@@ -68,8 +68,8 @@ const GraphPanel = () => {
   const options = [
     { type: <FaPlus />, name: "New Search", onClick: newSearch },
     { type: <IoHomeOutline />, name: "Home", onClick: goHome },
-    { type: <IoFilterOutline />, name: "Filter Result", onClick: filterResult },
-    { type: <CiBoxList />, name: "List Results", onClick: listResults },
+    // { type: <IoFilterOutline />, name: "Filter Result", onClick: filterResult },
+    // { type: <CiBoxList />, name: "List Results", onClick: listResults },
     { type: <CiShare2 />, name: "Share Results", onClick: shareResults },
     { type: <IoSaveOutline />, name: "Save Results", onClick: saveResults },
     { type: <TbFileImport />, name: "Import Results", onClick: loadResults },

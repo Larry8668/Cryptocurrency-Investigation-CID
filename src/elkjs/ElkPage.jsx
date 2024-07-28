@@ -46,7 +46,7 @@ export function ElkPage() {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [graphLoaded, setGraphLoaded] = useState(false);
   const [walletSearchType, setWalletSearchType] = useState("standard");
-  const [walletSearchDepth, setWalletSearchDepth] = useState("2");
+  const [walletSearchDepth, setWalletSearchDepth] = useState("4");
   const [currData, setCurrData] = useState([]);
 
   let { centralNodeAddress } = useParams();
