@@ -8,7 +8,8 @@ const BitcoinTransactions = () => {
 
   useEffect(() => {
     const address = 'bc1qhg7fpzxl68m2g5l0ane9h9akw4hfnh2s8hn3gm';
-    eventSourceRef.current = new EventSource(`http://localhost:8000/api/btc/trace/transactions/${address}`);
+    // eventSourceRef.current = new EventSource(`http://localhost:8000/api/btc/trace/transactions/${address}`);
+    eventSourceRef.current = new EventSource(`https://onchainanalysis.vercel.app/api/btc/trace/transactions/${address}`);
 
     eventSourceRef.current.onmessage = (event) => {
       const data = JSON.parse(event.data);

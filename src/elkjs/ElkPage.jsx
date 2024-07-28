@@ -65,7 +65,8 @@ export function ElkPage() {
 
     if (walletSearchType === "stream") {
       const eventSource = new EventSource(
-        `http://localhost:8000/api/${selectedChain.toLowerCase()}/stream/transactions/${centralNodeAddress}`
+        // `http://localhost:8000/api/${selectedChain.toLowerCase()}/stream/transactions/${centralNodeAddress}`
+        `https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/stream/transactions/${centralNodeAddress}`
       );
 
       console.log("Event source ->", eventSource);
@@ -101,7 +102,8 @@ export function ElkPage() {
             centralNodeAddress,
             "..."
           );
-          const url = `http://localhost:8000/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
+          // const url = `http://localhost:8000/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
+          const url = `https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
           console.log("URL ->", url);
           const response = await fetch(url);
           const data = await response.json();

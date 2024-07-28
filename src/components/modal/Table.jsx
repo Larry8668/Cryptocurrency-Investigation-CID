@@ -60,8 +60,8 @@ const TransactionTable = ({ WalletAddress, chain, setCsvData }) => {
         setPage((prev) => prev + 1);
       }
       let response = await fetch(
-        // `https://onchainanalysis.vercel.app/api/${chain.toLowerCase()}/address/${WalletAddress}`,
-        `http://localhost:8000/api/${chain.toLowerCase()}/address/${WalletAddress}`,
+        `https://onchainanalysis.vercel.app/api/${chain.toLowerCase()}/address/${WalletAddress}`,
+        // `http://localhost:8000/api/${chain.toLowerCase()}/address/${WalletAddress}`,
         { signal }
       );
       let json = await response.json();

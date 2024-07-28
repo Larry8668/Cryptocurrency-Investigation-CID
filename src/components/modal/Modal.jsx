@@ -37,7 +37,8 @@ const Modal = ({ props }) => {
     if (data?.id) {
       try {
         const response = await fetch(
-          `http://localhost:8000/api/crypto/${walletAddress}/${selectedChain}`
+          // `http://localhost:8000/api/crypto/${walletAddress}/${selectedChain}`
+          `https://onchainanalysis.vercel.app/api/crypto/${walletAddress}/${selectedChain}`
         );
         const details = await response.json();
         console.log(details)
