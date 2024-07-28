@@ -27,7 +27,8 @@ export default function SummaryModal({
     try {
       toast.info("Generating summary...");
       const response = await fetch(
-        `http://localhost:8000/api/evmchain/transactions/${walletAddress}`
+        `https://onchainanalysis.vercel.app/api/evmchain/transactions/${walletAddress}`
+        // `http://localhost:8000/api/evmchain/transactions/${walletAddress}`
       );
       const data = await response.json();
       console.log("Data: ", data);
