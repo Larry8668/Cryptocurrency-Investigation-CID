@@ -56,7 +56,8 @@ const GraphOverlay = ({
   handleSearch,
   walletSearchType,
   setWalletSearchType,
-  walletSearchDepth, setWalletSearchDepth
+  walletSearchDepth,
+  setWalletSearchDepth,
 }) => {
   const {
     selectedChain,
@@ -183,76 +184,77 @@ const GraphOverlay = ({
               <TransactionInput />
             </div>
           )}
-          <div className="border-2 border-[#b46efa] bg-[#f2eafa] border-dashed rounded-xl p-10 py-5 flex flex-col justify-center items-center gap-10">
-          <div className="flex w-full justify-center items-center gap-5">
-            <div className="text-base">Select search type :</div>
-            <RadioGroup
-              orientation="horizontal"
-              color="secondary"
-              className="text-sm"
-              value={walletSearchType}
-              onValueChange={setWalletSearchType}
-            >
-              <CustomRadio value="standard" description="(fastest)">
-                <Tooltip
-                  content="Regular single-layered search"
-                  placement="bottom"
-                  className="text-black"
-                >
-                  Standard
-                </Tooltip>
-              </CustomRadio>
-              <CustomRadio value="stream" description="(may take longer)">
-                <Tooltip
-                  content="Layered search for more detailed results"
-                  placement="bottom"
-                  className="text-black"
-                >
-                  Stream
-                </Tooltip>
-              </CustomRadio>
-            </RadioGroup>
-          </div>
-          {walletSearchType === "stream" && (
+          <div className="border-2 border-[#b46efa] bg-[#f2eafa] border-dashed rounded-xl p-8 py-3 flex flex-col justify-center items-center gap-5">
             <div className="flex w-full justify-center items-center gap-5">
-              <div className="text-base">Select search depth :</div>
+              <div className="text-base">Select search type :</div>
               <RadioGroup
                 orientation="horizontal"
                 color="secondary"
                 className="text-sm"
-                value={walletSearchDepth}
-                onValueChange={setWalletSearchDepth}
+                value={walletSearchType}
+                onValueChange={setWalletSearchType}
               >
-                <CustomRadio value="2">
+                <CustomRadio value="standard" description="(fastest)">
                   <Tooltip
-                    content="Search upto depth 2"
+                    content="Regular single-layered search"
                     placement="bottom"
                     className="text-black"
                   >
-                    2
+                    Standard
                   </Tooltip>
                 </CustomRadio>
-                <CustomRadio value="3">
+                <CustomRadio value="stream" description="(may take longer)">
                   <Tooltip
-                    content="Search upto depth 3"
+                    content="Layered search for more detailed results"
                     placement="bottom"
                     className="text-black"
                   >
-                    3
-                  </Tooltip>
-                </CustomRadio>
-                <CustomRadio value="4">
-                  <Tooltip
-                    content="Search upto depth 4"
-                    placement="bottom"
-                    className="text-black"
-                  >
-                    4
+                    Stream
                   </Tooltip>
                 </CustomRadio>
               </RadioGroup>
             </div>
-          )}</div>
+            {walletSearchType === "stream" && (
+              <div className="flex w-full justify-center items-center gap-5">
+                <div className="text-base">Select search depth :</div>
+                <RadioGroup
+                  orientation="horizontal"
+                  color="secondary"
+                  className="text-sm"
+                  value={walletSearchDepth}
+                  onValueChange={setWalletSearchDepth}
+                >
+                  <CustomRadio value="2">
+                    <Tooltip
+                      content="Search upto depth 2"
+                      placement="bottom"
+                      className="text-black"
+                    >
+                      2
+                    </Tooltip>
+                  </CustomRadio>
+                  <CustomRadio value="3">
+                    <Tooltip
+                      content="Search upto depth 3"
+                      placement="bottom"
+                      className="text-black"
+                    >
+                      3
+                    </Tooltip>
+                  </CustomRadio>
+                  <CustomRadio value="4">
+                    <Tooltip
+                      content="Search upto depth 4"
+                      placement="bottom"
+                      className="text-black"
+                    >
+                      4
+                    </Tooltip>
+                  </CustomRadio>
+                </RadioGroup>
+              </div>
+            )}
+          </div>
           {
             <div className="flex flex-col justify-center items-center gap-2 w-full">
               {(searchType === "Wallet"
