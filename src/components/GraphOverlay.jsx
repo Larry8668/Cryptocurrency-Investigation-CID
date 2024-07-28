@@ -84,7 +84,8 @@ const GraphOverlay = ({
   }, [validWallet]);
 
   useEffect(() => {
-    if (detectedChain.length && selectedChain == detectedChain[0].key) {
+    // if (detectedChain.length && selectedChain == detectedChain[0].key) {
+    if (detectedChain.length) {
       setValidWallet(true);
       setSearchChain(false);
       setSearchInput(detectedChain[0].address);

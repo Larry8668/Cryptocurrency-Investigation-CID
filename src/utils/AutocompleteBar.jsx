@@ -30,7 +30,8 @@ const AutocompleteBar = ({
   }, [isLoading]);
 
   useEffect(() => {
-    if (items.length === 1 && items[0].address === selectedChain) {
+    // if (items.length === 1 && items[0].address === selectedChain) {
+    if (items.length === 1) {
       setValidWallet(true);
       setSearchChain(false);
     } else {
@@ -65,9 +66,9 @@ const AutocompleteBar = ({
           <AutocompleteItem
             key={item.address}
             className="text-black dark:text-white"
-            startContent={
-              <img src={getImageByExchange(item.icon)} width={25} />
-            }
+            // startContent={
+            //   <img src={getImageByExchange(item.icon)} width={25} />
+            // }
           >
             {item.address}
           </AutocompleteItem>
