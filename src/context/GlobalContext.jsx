@@ -1,4 +1,5 @@
 import React, { createContext, useState, useMemo } from "react";
+import getImageByExchange from "../utils/ImageIconMap";
 
 export const GlobalContext = createContext();
 
@@ -11,6 +12,14 @@ export const GlobalProvider = ({ children }) => {
   const [chain, setChain] = useState(new Set(["BTC"]));
   const [outgoingTransactions, setOutgoingTransactions] = useState({});
   const [nodesToUpdate, setNodesToUpdate] = useState(null);
+
+  const exchangeAddresses = [
+    {
+      node: "17RWGEeB3ujFAKQax1ijqB1f3d5tDS13nR",
+      label: "BINANCE",
+      icon: getImageByExchange("Binance 7"),
+    },
+  ];
 
   const handleChainChange = (chain) => {
     setChain(new Set(chain));
@@ -58,7 +67,8 @@ export const GlobalProvider = ({ children }) => {
         updateOutgoingTransactions,
         toggleOutgoingTransactions,
         nodesToUpdate,
-        setNodesToUpdate
+        setNodesToUpdate,
+        exchangeAddresses,
       }}
     >
       {children}

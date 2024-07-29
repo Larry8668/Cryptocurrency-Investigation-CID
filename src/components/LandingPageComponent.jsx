@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 
 const LandingPageComponent = () => {
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  // const { isAuthenticated, loginWithRedirect } = useAuth0();
   return (
     <div className="h-[100vh] w-[100vw] bg-black bg-grid-white/[0.2] relative flex flex-col items-center justify-center">
       <div
@@ -53,9 +53,9 @@ const LandingPageComponent = () => {
             </div>
           </Link>
         </div>
-        {!isAuthenticated && (
+        {/* {!isAuthenticated && (
           <button onClick={loginWithRedirect}>Log in</button>
-        )}
+        )} */}
       </div>
     </div>
   );
