@@ -90,7 +90,7 @@ const Modal = ({ props }) => {
           <h1 className="text-2xl font-bold text-purple-600">
             Wallet Dashboard
           </h1>
-          <DownloadExcelButton size={20} fill="purple" data={csvData} />
+          <DownloadExcelButton size={20} fill="purple" data={csvData} node={walletAddress} />
         </div>
 
         {walletData ? (

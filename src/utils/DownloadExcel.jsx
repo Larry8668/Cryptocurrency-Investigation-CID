@@ -17,7 +17,7 @@ const formatDataToCSV = (dataArray) => {
   return [headers, ...rows];
 };
 
-const DownloadExcelButton = ({ data }) => {
+const DownloadExcelButton = ({ data, node }) => {
   const [csvData, setCsvData] = useState(null);
   useEffect(() => {
     if (data && data.length > 0) {
@@ -31,7 +31,7 @@ const DownloadExcelButton = ({ data }) => {
       {csvData ? (
         <CSVLink
           data={csvData}
-          filename="exported_data.csv"
+          filename={`${node}.csv`}
           className="btn btn-primary"
           target="_blank"
         >
