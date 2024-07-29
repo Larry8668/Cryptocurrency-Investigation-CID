@@ -29,10 +29,15 @@ export default function ElkNode({ data, id }: NodeProps<ElkNodeData>) {
   }, [data.label]);
 
   const formatAddress = (address) => {
-    const [baseAddress, hierarchy] = address.split(":");
-    return `${baseAddress.slice(0, 5)}...${baseAddress.slice(-5)}${
-      hierarchy ? `:${hierarchy}` : ""
-    }`;
+    if (address) {
+      const [baseAddress, hierarchy] = address.split(":");
+      if (baseAddress) {
+        return `${baseAddress.slice(0, 5)}...${baseAddress.slice(-5)}${
+          hierarchy ? `:${hierarchy}` : ""
+        }`;
+      }
+    }
+    return address;
   };
 
   const handleRightClick = async () => {
@@ -40,8 +45,12 @@ export default function ElkNode({ data, id }: NodeProps<ElkNodeData>) {
       toggleOutgoingTransactions(id);
     } else {
       try {
-        // const response = await fetch(`http://localhost:8000/api/${selectedChain.toLowerCase()}/address/${data.label.split(':')[0]}/outgoing`);
-        const response = await fetch(`https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/address/${data.label.split(':')[0]}/outgoing`);
+        const response = await fetch(
+          `http://localhost:8000/api/${selectedChain.toLowerCase()}/address/${
+            data.label.split(":")[0]
+          }/outgoing`
+        );
+        // const response = await fetch(`https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/address/${data.label.split(':')[0]}/outgoing`);
         const result = await response.json();
         updateOutgoingTransactions(id, result.transactions);
       } catch (error) {

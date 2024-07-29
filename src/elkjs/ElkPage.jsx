@@ -69,8 +69,8 @@ export function ElkPage() {
 
     if (walletSearchType === "stream") {
       const eventSource = new EventSource(
-        // `http://localhost:8000/api/${selectedChain.toLowerCase()}/stream/transactions/${centralNodeAddress}`
-        `https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/stream/transactions/${centralNodeAddress}`
+        `http://localhost:8000/api/${selectedChain.toLowerCase()}/stream/transactions/${centralNodeAddress}`
+        // `https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/stream/transactions/${centralNodeAddress}`
       );
 
       console.log("Event source ->", eventSource);
