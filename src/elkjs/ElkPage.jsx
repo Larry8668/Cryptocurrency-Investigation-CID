@@ -7,6 +7,7 @@ import ReactFlow, {
   useEdgesState,
   ControlButton,
   Panel,
+  MarkerType
 } from "reactflow";
 
 import GraphOverlay from "../components/GraphOverlay";
@@ -80,8 +81,18 @@ export function ElkPage() {
         console.log("Nodes ->", data.graphdata.nodes);
         console.log("Edges ->", data.graphdata.edges);
 
+        const updatedEdges = data.graphdata.edges.map(node => ({
+          ...node,
+          markerEnd: {
+            type: MarkerType.ArrowClosed,
+            width: 20,
+            height: 20,
+            color: '#FF0072',
+          },
+        }));
+
         setNodes((prevNodes) => [...prevNodes, ...data.graphdata.nodes]);
-        setEdges((prevEdges) => [...prevEdges, ...data.graphdata.edges]);
+        setEdges((prevEdges) => [...prevEdges, ...updatedEdges]);
 
         setGraphLoaded(true);
       };
@@ -112,8 +123,17 @@ export function ElkPage() {
           const data = await response.json();
           console.log("Response ->", data);
           setCurrData(data.results);
+          const updatedEdges = data.results.graphdata.edges.map(node => ({
+            ...node,
+            markerEnd: {
+              type: MarkerType.ArrowClosed,
+              width: 20,
+              height: 20,
+              color: node.style.stroke,
+            },
+          }));
           setNodes(data.results.graphdata.nodes);
-          setEdges(data.results.graphdata.edges);
+          setEdges(updatedEdges );
           setGraphLoaded(true);
         } catch (error) {
           console.error("Error fetching data: ", error);
