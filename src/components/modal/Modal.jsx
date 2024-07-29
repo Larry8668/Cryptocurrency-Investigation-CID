@@ -24,12 +24,24 @@ const tabs = [
 ];
 
 const Modal = ({ props }) => {
-  const { selectedChain } = useContext(GlobalContext);
+  const { selectedChain, exchangeAddresses } = useContext(GlobalContext);
   const { data, sideModalOpen, setSideModalOpen } = props;
   const [walletAddress, setWalletAddress] = useState(null);
   const [walletData, setWalletData] = useState(null);
   const [csvData, setCsvData] = useState(null);
   const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  const [icon, setIcon] = useState(null);
+  const [exchangeLabel, setExchangeLabel] = useState("");
+
+  useEffect(() => {
+    const exchange = exchangeAddresses.find((item) => item.node === data?.id);
+    if (exchange) {
+      setIcon(exchange?.icon);
+      setExchangeLabel(exchange?.label);
+      toast.success("Found an exchange address");
+    }
+  }, [data?.label]);
 
   useEffect(() => {
     if (data && data.id) {
@@ -90,7 +102,12 @@ const Modal = ({ props }) => {
           <h1 className="text-2xl font-bold text-purple-600">
             Wallet Dashboard
           </h1>
-          <DownloadExcelButton size={20} fill="purple" data={csvData} node={walletAddress} />
+          <DownloadExcelButton
+            size={20}
+            fill="purple"
+            data={csvData}
+            node={walletAddress}
+          />
         </div>
 
         {walletData ? (
@@ -102,9 +119,20 @@ const Modal = ({ props }) => {
               className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 p-4 px-6 rounded-2xl text-white shadow-lg"
             >
               <div className="text-xl font-bold mb-2">Wallet Overview</div>
-              <p className="text-md mb-1">
-                {selectedChain.toUpperCase()} Chain
-              </p>
+              {exchangeLabel && icon ? (
+                <div className="flex justify-start items-center gap-2 mb-1">
+                  <img
+                    src={icon}
+                    alt={exchangeLabel}
+                    className="w-6 h-6 rounded-full"
+                  />{" "}
+                  <span>{exchangeLabel}</span>
+                </div>
+              ) : (
+                <p className="text-md mb-1">
+                  {selectedChain.toUpperCase()} Chain
+                </p>
+              )}
               <div className="flex items-center space-x-2 mb-2">
                 <span className="text-sm">Address: </span>
                 <span className="bg-white text-purple-600 text-sm p-2 rounded-lg font-mono max-h-[330px] overflow-scroll">
