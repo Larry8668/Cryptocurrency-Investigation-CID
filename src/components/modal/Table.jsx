@@ -144,7 +144,7 @@ const TransactionTable = ({ WalletAddress, chain, setCsvData }) => {
 
     switch (columnKey) {
       case "value":
-        return `${(parseFloat(cellValue) / 1e18).toFixed(4)} ${chain}`;
+        return `${((cellValue)).toFixed(4)} ${chain}`;
       case "block_timestamp":
         return new Date(cellValue).toLocaleString();
       default:
