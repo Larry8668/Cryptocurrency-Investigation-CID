@@ -33,5 +33,8 @@ export default defineConfig({
     "process.env.VITE_VERCEL_AUTH0_DOMAIN": JSON.stringify(
       process.env.VITE_VERCEL_AUTH0_DOMAIN
     ),
+    "process.env.VITE_VERCEL_GEMINI_API_KEY": JSON.stringify(
+      process.env.VITE_VERCEL_GEMINI_API_KEY
+    ),
   },
 });
