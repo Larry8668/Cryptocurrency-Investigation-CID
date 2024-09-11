@@ -7,7 +7,7 @@ import ReactFlow, {
   useEdgesState,
   ControlButton,
   Panel,
-  MarkerType
+  MarkerType,
 } from "reactflow";
 
 import GraphOverlay from "../components/GraphOverlay";
@@ -25,7 +25,6 @@ import DownloadOptions from "../utils/DownloadOptions";
 import Modal from "../components/modal/Modal";
 import GraphPanel from "../components/GraphPanel";
 
-
 const nodeTypes = {
   elk: ElkNode,
 };
@@ -42,7 +41,9 @@ export function ElkPage() {
     selectedChain,
     outgoingTransactions,
     nodesToUpdate,
-    setNodesToUpdate
+    setNodesToUpdate,
+    searchType,
+    setSearchType,
   } = useContext(GlobalContext);
 
   const [search, setSearch] = useState("");
@@ -81,13 +82,13 @@ export function ElkPage() {
         console.log("Nodes ->", data.graphdata.nodes);
         console.log("Edges ->", data.graphdata.edges);
 
-        const updatedEdges = data.graphdata.edges.map(node => ({
+        const updatedEdges = data.graphdata.edges.map((node) => ({
           ...node,
           markerEnd: {
             type: MarkerType.ArrowClosed,
             width: 20,
             height: 20,
-            color: '#FF0072',
+            color: "#FF0072",
           },
         }));
 
@@ -117,13 +118,20 @@ export function ElkPage() {
             "..."
           );
           // const url = `http://localhost:8000/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
-          const url = `https://onchainanalysis.vercel.app/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
+          let url;
+          if (searchType === "Transaction") {
+            url = `http://localhost:8000/api/${selectedChain.toLowerCase()}/txhash/${centralNodeAddress}`;
+          } else {
+            url = `http://localhost:8000/api/${selectedChain.toLowerCase()}/address/${centralNodeAddress}`;
+          }
           console.log("URL ->", url);
           const response = await fetch(url);
           const data = await response.json();
           console.log("Response ->", data);
+
+          // Process wallet data
           setCurrData(data.results);
-          const updatedEdges = data.results.graphdata.edges.map(node => ({
+          const updatedEdges = data.results.graphdata.edges.map((node) => ({
             ...node,
             markerEnd: {
               type: MarkerType.ArrowClosed,
@@ -133,8 +141,10 @@ export function ElkPage() {
             },
           }));
           setNodes(data.results.graphdata.nodes);
-          setEdges(updatedEdges );
+          setEdges(updatedEdges);
+
           setGraphLoaded(true);
+          setSearchType("Wallet"); // Reset search type to Wallet after search
         } catch (error) {
           console.error("Error fetching data: ", error);
           toast.error("Failed to fetch data");
@@ -142,7 +152,7 @@ export function ElkPage() {
       };
       fetchData();
     }
-  }, [centralNodeAddress, selectedChain, walletSearchType]);
+  }, [centralNodeAddress, selectedChain, searchType]);
 
   useEffect(() => {
     if (nodesToUpdate) {
@@ -151,13 +161,15 @@ export function ElkPage() {
         // Add new nodes and edges
         const newNodes = transactions.map((tx, index) => ({
           id: `${nodesToUpdate}-${tx.to_address}-${index}`,
-          type: 'elk',
-          data: { 
-            label: `${tx.to_address}:${nodesToUpdate.split(':')[1] || '0'}-${index + 1}`,
+          type: "elk",
+          data: {
+            label: `${tx.to_address}:${nodesToUpdate.split(":")[1] || "0"}-${
+              index + 1
+            }`,
             targetHandles: [],
-            sourceHandles: []
+            sourceHandles: [],
           },
-          position: { x: 0, y: 0 }  // The layout algorithm will position this
+          position: { x: 0, y: 0 }, // The layout algorithm will position this
         }));
 
         const newEdges = transactions.map((tx, index) => ({
@@ -165,25 +177,40 @@ export function ElkPage() {
           source: nodesToUpdate,
           target: `${nodesToUpdate}-${tx.to_address}-${index}`,
           animated: true,
-          label: `${tx.value} ${selectedChain}`
+          label: `${tx.value} ${selectedChain}`,
         }));
 
-        setNodes(nodes => {
-          const existingNodes = nodes.filter(node => !node.id.startsWith(`${nodesToUpdate}-`));
+        setNodes((nodes) => {
+          const existingNodes = nodes.filter(
+            (node) => !node.id.startsWith(`${nodesToUpdate}-`)
+          );
           return [...existingNodes, ...newNodes];
         });
-        setEdges(edges => {
-          const existingEdges = edges.filter(edge => !edge.id.startsWith(`${nodesToUpdate}-`));
+        setEdges((edges) => {
+          const existingEdges = edges.filter(
+            (edge) => !edge.id.startsWith(`${nodesToUpdate}-`)
+          );
           return [...existingEdges, ...newEdges];
         });
       } else {
         // Remove nodes and edges
-        setNodes(nodes => nodes.filter(node => !node.id.startsWith(`${nodesToUpdate}-`)));
-        setEdges(edges => edges.filter(edge => !edge.id.startsWith(`${nodesToUpdate}-`)));
+        setNodes((nodes) =>
+          nodes.filter((node) => !node.id.startsWith(`${nodesToUpdate}-`))
+        );
+        setEdges((edges) =>
+          edges.filter((edge) => !edge.id.startsWith(`${nodesToUpdate}-`))
+        );
       }
       setNodesToUpdate(null);
     }
-  }, [nodesToUpdate, outgoingTransactions, setNodes, setEdges, selectedChain, setNodesToUpdate]);
+  }, [
+    nodesToUpdate,
+    outgoingTransactions,
+    setNodes,
+    setEdges,
+    selectedChain,
+    setNodesToUpdate,
+  ]);
 
   console.log("Nodes ->", nodes);
   console.log("Edges ->", edges);
