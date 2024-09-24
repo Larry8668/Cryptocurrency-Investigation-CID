@@ -21,6 +21,21 @@ const chainList = [
     image: bitcoin,
   },
   {
+    name: "Polygon",
+    key: "MATIC",
+    image: polygon,
+  },
+  {
+    name: "Tron",
+    key: "TRX",
+    image: tron,
+  },
+  {
+    name: "Avalanche",
+    key: "AVAX",
+    image: avalanche,
+  },
+  {
     name: "Solana",
     key: "SOL",
     image: solana,
@@ -34,21 +49,6 @@ const chainList = [
     name: "Ton",
     key: "TON",
     image: ton,
-  },
-  {
-    name: "Polygon",
-    key: "MATIC",
-    image: polygon,
-  },
-  {
-    name: "Avalanche",
-    key: "AVAX",
-    image: avalanche,
-  },
-  {
-    name: "Tron",
-    key: "TRX",
-    image: tron,
   },
   {
     name: "Cronos",
