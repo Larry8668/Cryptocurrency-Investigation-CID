@@ -495,7 +495,7 @@ export function ElkPage() {
       <Modal props={{ data: selectedNode, sideModalOpen, setSideModalOpen }} />
 
       {/* Generate PDF button at the bottom */}
-      {graphLoaded && walletSearchType === "stream" && (
+      {graphLoaded && (
         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2">
           <button
             onClick={generatePdf}

@@ -33,7 +33,7 @@ const examplesWallet = [
   { type: "ETH", address: "0xa336033fc39a359e375007e75af49768e98d0790" },
   { type: "BTC", address: "bc1qs4ln7kdtcwvcuaclqlv0qmf7cm446tdzjwv89c" },
   { type: "MATIC", address: "0xa336033fc39a359e375007e75af49768e98d0790" },
-  { type: "TRX", address: "TSTVYwFDp7SBfZk7Hrz3tucwQVASyJdwC7"},
+  { type: "TRX", address: "TLUd7JuJbZuqxkn1itHGurXUknygmRuiSj"},
 ];
 
 const exampleTransactions = [
