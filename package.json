@@ -27,6 +27,7 @@
     "axios": "^1.7.2",
     "clsx": "^2.1.0",
     "cors": "^2.8.5",
+    "crypto-ui": "file:",
     "dotenv": "^16.4.5",
     "elkjs": "^0.9.3",
     "eventsource": "^2.0.2",
