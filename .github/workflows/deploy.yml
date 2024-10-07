@@ -22,7 +22,7 @@ jobs:
             while [ $attempt -le $max_attempts ]; do
               echo "Attempt $attempt: Triggering Vercel deployment..."
               
-              curl -X GET https://api.vercel.com/v1/integrations/deploy/prj_KMyRCeifbv8simwNlqfr3rN4MYdL/YS5Ar0wLQs && break
+              curl -X GET https://api.vercel.com/v1/integrations/deploy/prj_x4bpUnLB0d44bbeI4G4sRkWlhI6t/BppQbjBrBe && break
 
               echo "Attempt $attempt failed! Retrying in $sleep_time seconds..."
               attempt=$((attempt + 1))
