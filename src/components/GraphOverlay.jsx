@@ -14,14 +14,13 @@ import {
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import "reactflow/dist/style.css";
 import "../index.css";
-import { FaCopy } from "react-icons/fa6";
 import { FaChevronDown } from "react-icons/fa6";
 import { chainList } from "../utils/ChainList";
 import { toast } from "sonner";
 import { SyncLoader } from "react-spinners";
 import AutocompleteBar from "../utils/AutocompleteBar";
-import { FaInfo } from "react-icons/fa6";
-
+import { FaInfo, FaCopy, FaStar, FaGithub } from "react-icons/fa6";
+import styled, { keyframes } from 'styled-components';
 import InfoModal from "./modal/InfoModal";
 import { Link } from "react-router-dom";
 import ChainDropdown from "../utils/ChainDropdown";
@@ -33,7 +32,7 @@ const examplesWallet = [
   { type: "ETH", address: "0xa336033fc39a359e375007e75af49768e98d0790" },
   { type: "BTC", address: "bc1qs4ln7kdtcwvcuaclqlv0qmf7cm446tdzjwv89c" },
   { type: "MATIC", address: "0xa336033fc39a359e375007e75af49768e98d0790" },
-  { type: "TRX", address: "TLUd7JuJbZuqxkn1itHGurXUknygmRuiSj"},
+  { type: "TRX", address: "TLUd7JuJbZuqxkn1itHGurXUknygmRuiSj" },
 ];
 
 const exampleTransactions = [
@@ -53,6 +52,60 @@ const options = [
   { value: "Transaction", label: "Transaction" },
 ];
 
+const shimmer = keyframes`
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+`;
+
+const ShimmeringButton = styled(Button)`
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(
+      45deg,
+      #ff0000,
+      #ff7300,
+      #fffb00,
+      #48ff00,
+      #00ffd5,
+      #002bff,
+      #7a00ff,
+      #ff00c8,
+      #ff0000
+    );
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    animation: ${shimmer} 20s linear infinite;
+  }
+
+  &:hover::before {
+    filter: blur(10px);
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: white;
+    z-index: -1;
+  }
+`;
+
 const GraphOverlay = ({
   centralNodeAddress,
   setSearch,
@@ -71,10 +124,22 @@ const GraphOverlay = ({
     setSearchType,
   } = useContext(GlobalContext);
 
+  const githubRepos = [
+    {
+      name: "Frontend",
+      url: "https://github.com/Larry8668/Cryptocurrency-Investigation-CID",
+    },
+    { name: "Backend", url: "https://github.com/pramaths/onchainanalysis" },
+  ];
+
   const homies = [
     { name: "Leharaditya", link: "https://github.com/Larry8668", sep: <>&</> },
     { name: "PramathS", link: "https://github.com/pramaths", sep: <>🚀</> },
   ];
+
+  const handleStarRepo = (repoUrl) => {
+    window.open(`${repoUrl}/stargazers`, "_blank");
+  };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -140,6 +205,23 @@ const GraphOverlay = ({
               <FaInfo />
             </Button>
           </Tooltip>
+          <div className="flex items-center gap-2">
+            <FaGithub />
+            {githubRepos.map((repo, index) => (
+              <Tooltip
+                key={index}
+                content={`Star ${repo.name}`}
+                className="text-black"
+              >
+                <ShimmeringButton
+                  onClick={() => handleStarRepo(repo.url)}
+                  className="text-base rounded-xl border-1 border-slate-600 bg-white shadow-lg"
+                >
+                  <FaStar /> {repo.name}
+                </ShimmeringButton>
+              </Tooltip>
+            ))}
+          </div>
           Start Investigation 🔎
           {searchType === "Wallet" ? (
             <div className="w-full flex justify-center items-center flex-col md:flex-row gap-5">
@@ -178,17 +260,21 @@ const GraphOverlay = ({
             <div className="w-full flex justify-between items-center gap-4">
               <div className="flex justify-center items-center gap-5">
                 {options.map((option) => (
-                  <Tooltip content={`Search by ${option.label}`} className="text-black">
-                  <Button
-                    onClick={() => setSearchType(option.value)}
-                    className={`${
-                      searchType === option.value
-                        ? "bg-purple-500 text-white border-2 border-purple-700"
-                        : "bg-white text-black border border-slate-400 hover:bg-purple-300"
-                    } p-2 rounded-md text-xs`}
+                  <Tooltip
+                    content={`Search by ${option.label}`}
+                    className="text-black"
                   >
-                    {option.label}
-                  </Button></Tooltip>
+                    <Button
+                      onClick={() => setSearchType(option.value)}
+                      className={`${
+                        searchType === option.value
+                          ? "bg-purple-500 text-white border-2 border-purple-700"
+                          : "bg-white text-black border border-slate-400 hover:bg-purple-300"
+                      } p-2 rounded-md text-xs`}
+                    >
+                      {option.label}
+                    </Button>
+                  </Tooltip>
                 ))}
               </div>
               <Tooltip content="Upload Graph" className="text-black">
